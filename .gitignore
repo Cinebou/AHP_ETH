@@ -1,0 +1,18 @@
+# dynamic model
+FMU/
+
+# results of dynamic simulation
+PerformanceMap/
+
+# pycash
+__pycache__/
+trash/
+
+#log file
+Log/
+
+#output data
+Results/
+
+#test code
+test_code/
