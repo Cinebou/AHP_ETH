@@ -1,15 +1,17 @@
 # dynamic model
-FMU/
+FMU/*.fmu
 
 # results of dynamic simulation
-PerformanceMap/
+PerformanceMap/*.pickle
+PerformanceMap/*.csv
 
 # pycash
 __pycache__/
 trash/
 
 #log file
-Log/
+Log/*.log
+Log/*.csv
 
 #output data
 Results/
