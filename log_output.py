@@ -22,11 +22,19 @@ class Log:
 
                 # output of key parameter
                 lg =  logging.getLogger('excel')
-                handler_excel = logging.FileHandler(filename = "results/log_parameter.csv",mode = 'a')
-                handler_excel.setFormatter(logging.Formatter("%(message)s"))
+                handler_excel = logging.FileHandler(filename = "Log/log_parameter.csv",mode = 'a')
+                #handler_excel.setFormatter(logging.Formatter("%(message)s"))
                 lg.setLevel(logging.INFO)  # log on 
                 #lg.setLevel(logging.WARN) # log off
                 lg.addHandler(handler_excel)
+
+                # output for validation
+                lg =  logging.getLogger('validation')
+                handler_excel2 = logging.FileHandler(filename = "Log/validate.csv",mode = 'a')
+                handler_excel2.setFormatter(logging.Formatter("%(message)s"))
+                lg.setLevel(logging.INFO)  # log on 
+                #lg.setLevel(logging.WARN) # log off
+                lg.addHandler(handler_excel2)
 
                 Log.__instance = self     
 
@@ -40,6 +48,10 @@ class Log:
 
         def log_excel(self,msg):
                 log = logging.getLogger('excel')
+                log.info(msg)
+
+        def log_validate(self,msg):
+                log = logging.getLogger('validation')
                 log.info(msg)
 
 def ARE(COP_dyn_852718,Qflow_chill_dyn_852718,COP_stat_852718,Qflow_chill_stat_852718,COP_dyn_903010,Qflow_chill_dyn_903010,COP_stat_903010,Qflow_chill_stat_903010):
@@ -86,7 +98,9 @@ def log_TP(AKM,var,eq_name):
         l.log_TePr(" mv(ads) = {}, mv(des) = {}, X_eq_ads = {}, X_eq_des = {}".format(mv_ads,  mv_des, X_eq_ads, X_eq_des))
         return 0
 
-
+def log_excel_msg(msg):
+        l.log_validate(msg)
+        return 0
 
 def log_output_excel(AKM,init = False):
         

@@ -21,8 +21,10 @@ class params:
               'T_ads_in':300.15,
               'T_des_in':358.15,
               't_cycle':1000,
-              'corr_sor': 0.722020667,
-              'corr_HX': 1.0349777,
+              'corr_sor_c': 0.722020667,
+              'corr_sor_t': 0,
+              'corr_HX_c': 1.0349777,
+              'corr_HX_t':0,
               'corr_fl': 0}
 
         self.p903010 = {'m_flow_evp':0.191, #903010
@@ -45,8 +47,10 @@ class params:
               'T_ads_in':303.15,
               'T_des_in':363.15,
               't_cycle':1000,
-              'corr_sor': 0.722020667,
-              'corr_HX': 1.0349777,
+              'corr_sor_c': 0.722020667,
+              'corr_sor_t': 0,
+              'corr_HX_c': 1.0349777,
+              'corr_HX_t':0,
               'corr_fl': 0}
 
         self.p852718_one_temp = {'m_flow_evp':0.191, #852718 for one temperature
