@@ -19,8 +19,9 @@ t_cycle_dyn_852718, Qflow_chill_dyn_852718, COP_dyn_852718 = lgo.read_pickle('./
 t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = lgo.read_pickle('./PerformanceMap/SCP_COP/results_dyn_903010.pickle')
 
 param = params()
-AKM_852718 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p852718)
-AKM_903010 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p903010)
+AKM_andrej = SteadyStateAKM.adsorptionChiller_steadyState(**param.Andrej)
+#AKM_852718 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p852718)
+#AKM_903010 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p903010)
 
 def param_set(AKM_i,params):
     AKM_i.alphaA_evp_o  = params[0]
@@ -35,11 +36,10 @@ def param_set(AKM_i,params):
     return 0
 
 def calc_map(AKM_i):
-    var_guess = np.array([291.15,300.15,300.15,358.15,0.2,0.05])
+    var_guess = np.array([AKM_i.T_evp_in,AKM_i.T_cond_in,AKM_i.T_ads_in,AKM_i.T_des_in,0.2,0.05])
     t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = lgo.read_pickle('./PerformanceMap/SCP_COP/results_dyn_903010.pickle')
     t_cycle_array=np.array(t_cycle_dyn_903010); Q_flow_chill = np.empty(t_cycle_dyn_903010.size); COP = np.empty(t_cycle_dyn_903010.size)
-    #fitted_params = [1.26281335e+02, 3.07708529e+03, 3.62063043e+02, 6.14056817e-10, 7.29550500e-01, 1.03393888e+00]
-    #param_set(AKM_i,fitted_params)
+    
     for num, t_cycle in enumerate(t_cycle_array):
         AKM_i.t_cycle = t_cycle
         AKM_i.solve(var_guess)
@@ -48,11 +48,15 @@ def calc_map(AKM_i):
         #lgo.log_output_excel(AKM_i)
     return COP, Q_flow_chill
 
+COP_stat, Qflow_chill_stat = calc_map(AKM_andrej)
 #COP_stat_852718, Qflow_chill_stat_852718 = calc_map(AKM_852718)
 #COP_stat_903010, Qflow_chill_stat_903010 = calc_map(AKM_903010)
 
 time_end = time.time()
 print("calculation time ::  ",time_end - time_sta," sec")
+
+plt.plot(COP_stat, Qflow_chill_stat)
+plt.show()
 
 """
 error = lgo.ARE(COP_dyn_852718,Qflow_chill_dyn_852718,COP_stat_852718,Qflow_chill_stat_852718,COP_dyn_903010,Qflow_chill_dyn_903010,COP_stat_903010,Qflow_chill_stat_903010)

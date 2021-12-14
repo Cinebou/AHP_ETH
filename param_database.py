@@ -1,6 +1,32 @@
 
 class params:
     def __init__(self):
+        self.Andrej = { 'm_flow_evp':0.191, # 852718
+              'm_flow_cond':0.111,
+              'm_flow_ads':0.166,
+              'm_flow_des':0.163,
+              'alphaA_evp_o':1.39975885e+02,
+              'alphaA_cond_o':3.07739023e+03,
+              'alphaA_ads_o':3.54533358e+02,
+              'alphaA_evp_i':1.39975885e+02,
+              'alphaA_cond_i':3.07739023e+03,
+              'alphaA_ads_i':3.54533358e+02*10,
+              'D_eff':5.44448611e-10,
+              'm_sor':2.236,
+              'r_particle':0.00045,
+              'm_HX':4.211,
+              'm_fl':0.94,
+              'T_evp_in':291.15,
+              'T_cond_in':300.15,
+              'T_ads_in':300.15,
+              'T_des_in':358.15,
+              't_cycle':1000,
+              'corr_sor_c': 6.84359359e-01,
+              'corr_sor_t': 0,
+              'corr_HX_c': 1.07286827e+00,
+              'corr_HX_t':0,
+              'corr_fl': 0}
+
         self.p852718 = { 'm_flow_evp':0.191, # 852718
               'm_flow_cond':0.111,
               'm_flow_ads':0.166,

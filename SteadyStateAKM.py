@@ -79,8 +79,8 @@ class adsorptionChiller_steadyState:
         """Calculates internal parameters
         """
         #Set correction facotrs for simulated mass flows
-        self.corr_sor = self.corr_sor_c + self.corr_sor_t * (self.t_cycle)**0.5
-        self.corr_HX = self.corr_HX_c + self.corr_HX_t * (self.t_cycle)**0.5
+        self.corr_sor = self.corr_sor_c #+ self.corr_sor_t * (self.t_cycle)**0.5
+        self.corr_HX = self.corr_HX_c #+ self.corr_HX_t * (self.t_cycle)**0.5
 
         self.mcp_evp = self.m_flow_evp*self.cp_W
         self.mcp_cond = self.m_flow_cond*self.cp_W
