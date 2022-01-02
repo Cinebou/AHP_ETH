@@ -7,6 +7,7 @@ Created on Thu Oct 15 12:57:57 2020
 import numpy as np
 import scipy.constants as const
 from scipy import optimize
+import math
 
 from workingpair_database import wp_db
 from fluidProp import VLEFluid
@@ -214,6 +215,10 @@ class workingpair:
             pass
 
         VLE = self.fluidProp.calc_VLE_T(T)
+
+        #if math.isnan(VLE.p_v):
+        #    print(' saturation pressure is NAN\n','temp : ',T)
+
         A = - const.R/self.MolarW * T * np.log(p/VLE.p_v)
         return A
 

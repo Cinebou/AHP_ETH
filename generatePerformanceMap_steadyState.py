@@ -12,14 +12,14 @@ import SteadyStateAKM
 import log_output as lgo
 from param_database import params
 import time
-time_sta = time.time()
+
 
 #%% Read results from dynamic simulation
 t_cycle_dyn_852718, Qflow_chill_dyn_852718, COP_dyn_852718 = lgo.read_pickle('./PerformanceMap/SCP_COP/results_dyn_852718.pickle')
 t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = lgo.read_pickle('./PerformanceMap/SCP_COP/results_dyn_903010.pickle')
 
 param = params()
-AKM_852718 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p852718)
+#AKM_852718 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p852718)
 AKM_903010 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p903010)
 
 def param_set(AKM_i,params):
@@ -38,8 +38,7 @@ def calc_map(AKM_i):
     var_guess = np.array([291.15,300.15,300.15,358.15,0.2,0.05])
     t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = lgo.read_pickle('./PerformanceMap/SCP_COP/results_dyn_903010.pickle')
     t_cycle_array=np.array(t_cycle_dyn_903010); Q_flow_chill = np.empty(t_cycle_dyn_903010.size); COP = np.empty(t_cycle_dyn_903010.size)
-    #fitted_params = [1.26281335e+02, 3.07708529e+03, 3.62063043e+02, 6.14056817e-10, 7.29550500e-01, 1.03393888e+00]
-    #param_set(AKM_i,fitted_params)
+
     for num, t_cycle in enumerate(t_cycle_array):
         AKM_i.t_cycle = t_cycle
         AKM_i.solve(var_guess)
@@ -48,24 +47,16 @@ def calc_map(AKM_i):
         #lgo.log_output_excel(AKM_i)
     return COP, Q_flow_chill
 
-#COP_stat_852718, Qflow_chill_stat_852718 = calc_map(AKM_852718)
-#COP_stat_903010, Qflow_chill_stat_903010 = calc_map(AKM_903010)
+    
+def main():
+    #COP_stat_852718, Qflow_chill_stat_852718 = calc_map(AKM_852718)
+    time_sta = time.time()
+    COP_stat_903010, Qflow_chill_stat_903010 = calc_map(AKM_903010)
 
-time_end = time.time()
-print("calculation time ::  ",time_end - time_sta," sec")
+    time_end = time.time()
+    print("calculation time ::  ",time_end - time_sta," sec")
+    print("calc time for each case  :  ", (time_end - time_sta)/len(COP_stat_903010))
 
-"""
-error = lgo.ARE(COP_dyn_852718,Qflow_chill_dyn_852718,COP_stat_852718,Qflow_chill_stat_852718,COP_dyn_903010,Qflow_chill_dyn_903010,COP_stat_903010,Qflow_chill_stat_903010)
-print(error)
-plt.plot(COP_dyn_903010,Qflow_chill_dyn_903010,'ro')
-plt.plot(COP_dyn_852718,Qflow_chill_dyn_852718,'bo')
-plt.plot(COP_stat_903010, Qflow_chill_stat_903010,'r-')
-plt.plot(COP_stat_852718, Qflow_chill_stat_852718,'b-')
-plt.show()
-"""
-"""
-results_stat={'t_cycle': t_cycle_array, 'Q_flow_chill': Q_flow_chill, 'COP': COP}
-with open('results_stat.pickle', 'wb') as f:
-        # Pickle the 'results' list using the highest protocol available.
-        pickle.dump(results/results_stat, f, pickle.HIGHEST_PROTOCOL)
-"""
+
+if __name__ == "__main__":
+    main()

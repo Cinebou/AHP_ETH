@@ -4,7 +4,7 @@ class params:
         self.p852718 = { 'm_flow_evp':0.191, # 852718
               'm_flow_cond':0.111,
               'm_flow_ads':0.166,
-              'm_flow_des':0.163,
+              'm_flow_des':0.166,
               'alphaA_evp_o':131.625075,
               'alphaA_cond_o':3077.3633,
               'alphaA_ads_o':351.773346,

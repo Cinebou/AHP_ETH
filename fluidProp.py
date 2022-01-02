@@ -52,7 +52,6 @@ class VLEFluid:
         VLE = fl.zs(["T","q"],[T,q],prop_list,self.fluid,Eh="default")
         VLEFluid.h_v = VLE[4]
         VLEFluid.p_v = VLE[1]
-        #VLEFluid.arfa = VLE[6]
         return VLEFluid
 
     def calc_VLE_liquid_T(self,T,unit_T='K'):

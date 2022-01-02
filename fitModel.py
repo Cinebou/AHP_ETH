@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import time
 import SteadyStateAKM
 import log_output as lgo
+from pprint import pprint
 
 time_sta = time.time()
 
@@ -95,7 +96,6 @@ def performance(corr,t_cycle_852718,t_cycle_903010, logout = False):
     
     Qflow_heat_903010 = np.array([AKM_i.Q_flow_des for AKM_i in AKM_903010])
 
-    # the short-cut model has only one tank in the system, while dynamic model moght have two tanks
     Qflow_chill_852718 = 2*Qflow_chill_852718; Qflow_heat_852718 = 2*Qflow_heat_852718; Qflow_chill_903010 = 2*Qflow_chill_903010; Qflow_heat_903010 = 2*Qflow_heat_903010
     """
     if logout:
