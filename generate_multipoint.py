@@ -28,7 +28,7 @@ def calc_all():
 
 def T3_cap(T_heat, T_cool, T_chill):
     param = params()
-    AKM = SteadyStateAKM.adsorptionChiller_steadyState(**param.p903010)
+    AKM = SteadyStateAKM.adsorptionChiller_steadyState(**param.Andrej)
     AKM.T_des_in = T_heat;  AKM.T_ads_in = T_cool;  AKM.T_cond_in = T_cool;  AKM.T_evp_in = T_chill
     COP, Qflow = gMap.calc_map(AKM)
     t3 = []
@@ -41,8 +41,8 @@ def main():
     stat_data_point = calc_all()
     result = stat_data_point.sort_values(['T_heat','T_cool', 'T_chill','t_Cycle'])
     result.to_csv('results/results_stat2.csv')
-    # the way of extend t3 was a bit strange
-    # I need further modification and validation
+
 
 if __name__=='__main__':
     main()
+

@@ -13,8 +13,8 @@ import csv
 
 # read data
 #stat_data = pd.read_csv('results_stat_all.csv')
-stat_data = pd.read_csv('./Results/results_stat_all.csv')
-dyn_data=pd.read_csv('./PerformanceMap/results_dyn_all.csv')
+stat_data = pd.read_csv('./Results/results_stat_andrej.csv')
+dyn_data=pd.read_csv('./Results/results_dyn_all.csv')
 
 
 # key temperature triple
@@ -22,6 +22,7 @@ def temp_valid(i):
     global dyn_data, stat_data
     Heat = stat_data['T_heat'][i]; Cool = stat_data['T_cool'][i]; Chill = stat_data['T_chill'][i]; t_Cycle = stat_data['t_Cycle'][i]
     if Heat==dyn_data['T_heat'][i] and Cool==dyn_data['T_cool'][i] and Chill==dyn_data['T_chill'][i] and t_Cycle==dyn_data['t_Cycle'][i]:
+
         #if Heat > Cool > Chill:
         return True
     return False
@@ -40,7 +41,7 @@ def All_ARE():
 stat_COP = []; dyn_COP=[]
 stat_Qflow=[]; dyn_Qflow=[]
 error_count = 0
-max_deviation = 0.3
+max_deviation = 0.4
 for i in range(len(stat_data)):
     if temp_valid(i):
         stat_COP.append(stat_data['COP'][i]); dyn_COP.append(dyn_data['COP'][i])
@@ -58,6 +59,7 @@ for i in range(len(stat_data)):
 print("num_error =  ", error_count, "  error_rate = ", error_count/len(stat_data))
 print('data point = ', len(stat_COP))
 print("Average relative error of all points  = ",All_ARE())
+
 
 
 

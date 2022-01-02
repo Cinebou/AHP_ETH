@@ -22,6 +22,7 @@ param = params()
 #AKM_852718 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p852718)
 AKM_903010 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p903010)
 
+
 def param_set(AKM_i,params):
     AKM_i.alphaA_evp_o  = params[0]
     AKM_i.alphaA_evp_i  = params[0]
@@ -35,7 +36,7 @@ def param_set(AKM_i,params):
     return 0
 
 def calc_map(AKM_i):
-    var_guess = np.array([291.15,300.15,300.15,358.15,0.2,0.05])
+    var_guess = np.array([AKM_i.T_evp_in,AKM_i.T_cond_in,AKM_i.T_ads_in,AKM_i.T_des_in,0.2,0.05])
     t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = lgo.read_pickle('./PerformanceMap/SCP_COP/results_dyn_903010.pickle')
     t_cycle_array=np.array(t_cycle_dyn_903010); Q_flow_chill = np.empty(t_cycle_dyn_903010.size); COP = np.empty(t_cycle_dyn_903010.size)
 
@@ -52,6 +53,7 @@ def main():
     #COP_stat_852718, Qflow_chill_stat_852718 = calc_map(AKM_852718)
     time_sta = time.time()
     COP_stat_903010, Qflow_chill_stat_903010 = calc_map(AKM_903010)
+
 
     time_end = time.time()
     print("calculation time ::  ",time_end - time_sta," sec")
