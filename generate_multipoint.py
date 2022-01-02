@@ -15,10 +15,11 @@ from pprint import pprint
 
 t_cycle_dyn, Qflow_chill_dyn, COP_dyn = lgo.read_pickle('./PerformanceMap/SCP_COP/results_dyn_852718.pickle')
 
+
 def calc_all():
     results_stat = pd.DataFrame([], index = ['T_heat', 'T_cool', 'T_chill','t_Cycle','COP','Q_flow_cool_avg']).T
-    for i in range(31): # T_heat 31
-        for j in range(26): # T_cool 26
+    for i in range(31):         # T_heat  31
+        for j in range(26):     # T_cool  26
             for k in range(11): # T_chill 11
                 T_heat = 333.15 + i;   T_cool = 288.15 + j;  T_chill = 283.15 + k
                 result_temp = T3_cap(T_heat, T_cool, T_chill)
@@ -36,6 +37,7 @@ def T3_cap(T_heat, T_cool, T_chill):
     results_t3 = pd.DataFrame(t3, index = ['T_heat', 'T_cool', 'T_chill','t_Cycle','COP','Q_flow_cool_avg']).T
     print(results_t3)
     return results_t3
+
 
 def main():
     stat_data_point = calc_all()

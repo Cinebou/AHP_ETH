@@ -4,6 +4,7 @@ Created on Fri Oct 23 14:52:58 2020
 
 @author: gibelhaus
 """
+from Balance_Equation import Balance_equation
 import numpy as np
 from scipy import optimize
 import adsEqui_refprop as adsEqui
@@ -79,8 +80,8 @@ class adsorptionChiller_steadyState:
         """Calculates internal parameters
         """
         #Set correction facotrs for simulated mass flows
-        self.corr_sor = self.corr_sor_c #+ self.corr_sor_t * (self.t_cycle)**0.5
-        self.corr_HX = self.corr_HX_c #+ self.corr_HX_t * (self.t_cycle)**0.5
+        self.corr_sor = self.corr_sor_c + self.corr_sor_t * (self.t_cycle)**0.5
+        self.corr_HX = self.corr_HX_c + self.corr_HX_t * (self.t_cycle)**0.5
 
         self.mcp_evp = self.m_flow_evp*self.cp_W
         self.mcp_cond = self.m_flow_cond*self.cp_W
@@ -108,61 +109,19 @@ class adsorptionChiller_steadyState:
         self.mcp_fl = self.m_flow_fl*self.cp_W
         
     def __EqSystem(self,var):
-        """Define the equation system
+        """Define the equation system, all unit is W (J/s)
         """
-        T_evp=var[0]
-        T_cond=var[1]
-        T_ads=var[2]
-        T_des=var[3]
-        X_ads=var[4]
-        X_des=var[5]
-        
-        F = np.empty((6)) # all unit is W (J/s)
-
-        # energy balance at evaporator
-        F[0] = (self.mcp_evp*(self.T_evp_in-T_evp)*(1-np.exp(-self.NTU_evp))
-                + self.beta_LDF*(self.wp.calc_x_pT(self.fluidProp.calc_VLE_T(T_evp).p_v,T_ads)-X_ads)
-                *(self.fluidProp.calc_VLE_liquid_T(T_cond).h_l-self.fluidProp.calc_VLE_T(T_evp).h_v)) #+ lgo.log_TP(self,var,"F[0]")
-
-        # energy balance at condeser
-        F[1] = (self.mcp_cond*(self.T_cond_in-T_cond)*(1-np.exp(-self.NTU_cond)) 
-                + self.beta_LDF*(X_des-self.wp.calc_x_pT(self.fluidProp.calc_VLE_T(T_cond).p_v,T_des))
-                *(self.fluidProp.calc_fluidProp_pT(self.wp.calc_p_xT(X_des,T_des),T_des).h-self.fluidProp.calc_VLE_liquid_T(T_cond).h_l)) #+ lgo.log_TP(self,var,"F[1]")
-        
-        # energy balance at adsorber
-        F[2] = (self.mcp_ads*(self.T_ads_in-T_ads)*(1-np.exp(-self.NTU_ads)) 
-                + self.beta_LDF
-                *(self.wp.calc_x_pT(self.fluidProp.calc_VLE_T(T_evp).p_v,T_ads)-X_ads)
-                *self.fluidProp.calc_VLE_T(T_evp).h_v 
-                + self.mcp_sor*(T_des-T_ads) 
-                + self.m_flow_sor
-                *(X_des*self.wp.calc_h_ads_xT(X_des,T_des)-X_ads*self.wp.calc_h_ads_xT(X_ads,T_ads)) 
-                + self.mcp_HX*(T_des-T_ads + self.mcp_des/self.alphaA_ads_o*(self.T_des_in-T_des)*(1-np.exp(-self.NTU_des)) - self.mcp_ads/self.alphaA_ads_o*(self.T_ads_in-T_ads)*(1-np.exp(-self.NTU_ads)))
-                + self.mcp_fl*(T_des-T_ads + 1/self.NTU_des*(self.T_des_in-T_des)*(1-np.exp(-self.NTU_des)) - 1/self.NTU_ads*(self.T_ads_in-T_ads)*(1-np.exp(-self.NTU_ads)))) #+ lgo.log_TP(self,var,"F[2]")
-        
-        # energy balance at desorber
-        F[3] = (self.mcp_des*(self.T_des_in-T_des)*(1-np.exp(-self.NTU_des)) 
-                - self.beta_LDF
-                *(X_des-self.wp.calc_x_pT(self.fluidProp.calc_VLE_T(T_cond).p_v,T_des))
-                *self.fluidProp.calc_fluidProp_pT(self.wp.calc_p_xT(X_des,T_des),T_des).h 
-                + self.mcp_sor*(T_ads-T_des) 
-                + self.m_flow_sor
-                *(X_ads*self.wp.calc_h_ads_xT(X_ads,T_ads)-X_des*self.wp.calc_h_ads_xT(X_des,T_des))
-                + self.mcp_HX*(T_ads-T_des + self.mcp_ads/self.alphaA_ads_o*(self.T_ads_in-T_ads)*(1-np.exp(-self.NTU_ads)) - self.mcp_des/self.alphaA_ads_o*(self.T_des_in-T_des)*(1-np.exp(-self.NTU_des))) 
-                + self.mcp_fl*(T_ads-T_des + 1/self.NTU_ads*(self.T_ads_in-T_ads)*(1-np.exp(-self.NTU_ads)) - 1/self.NTU_des*(self.T_des_in-T_des)*(1-np.exp(-self.NTU_des)))) #+ lgo.log_TP(self,var,"F[3]")
-        
-        # mass balance at ad/desorber
-        F[4] = (self.beta_LDF
-                *(X_des-self.wp.calc_x_pT(self.fluidProp.calc_VLE_T(T_cond).p_v,T_des)) 
-                + self.m_flow_sor*(X_des-X_ads)) #+ lgo.log_TP(self,var,"F[4]")
-
-        # consistent of ad/desorption speed
-        F[5] = (self.wp.calc_x_pT(self.fluidProp.calc_VLE_T(T_evp).p_v,T_ads) 
-                + self.wp.calc_x_pT(self.fluidProp.calc_VLE_T(T_cond).p_v,T_des) 
-                - X_ads - X_des) #+ lgo.log_TP(self,var,"F[5]")
-        
+        BEQ = Balance_equation(self,var)
+        F = np.empty((6))           
+        F[0] = BEQ.energy_evp()
+        F[1] = BEQ.energy_cond()
+        F[2] = BEQ.energy_ads()
+        F[3] = BEQ.energy_des()
+        F[4] = BEQ.mass_in_bed()
+        F[5] = BEQ.two_mv_speed()
         return F
-        
+
+
     def solve(self,var_guess):
         self.__internalParameters()
         var = optimize.root(self.__EqSystem,var_guess)
@@ -170,6 +129,8 @@ class adsorptionChiller_steadyState:
         self.__calcHeatFlows()
         return var
             
+            
+    # summarize the results
     def __calcHeatFlows(self):
         self.T_evp_out = self.T_evp + (self.T_evp_in - self.T_evp)*np.exp(-self.NTU_evp)
         self.T_cond_out = self.T_cond + (self.T_cond_in - self.T_cond)*np.exp(-self.NTU_cond)

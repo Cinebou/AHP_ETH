@@ -50,11 +50,8 @@ def calc_map(AKM_i):
 
     
 def main():
-    #COP_stat_852718, Qflow_chill_stat_852718 = calc_map(AKM_852718)
     time_sta = time.time()
     COP_stat_903010, Qflow_chill_stat_903010 = calc_map(AKM_903010)
-
-
     time_end = time.time()
     print("calculation time ::  ",time_end - time_sta," sec")
     print("calc time for each case  :  ", (time_end - time_sta)/len(COP_stat_903010))

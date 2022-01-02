@@ -97,14 +97,14 @@ def performance(corr,t_cycle_852718,t_cycle_903010, logout = False):
     Qflow_heat_903010 = np.array([AKM_i.Q_flow_des for AKM_i in AKM_903010])
 
     Qflow_chill_852718 = 2*Qflow_chill_852718; Qflow_heat_852718 = 2*Qflow_heat_852718; Qflow_chill_903010 = 2*Qflow_chill_903010; Qflow_heat_903010 = 2*Qflow_heat_903010
-    """
+    
     if logout:
         for AKM_i in AKM_903010:
             lgo.log_output_eq(AKM_i)
             lgo.log_output_excel(AKM_i)
         for AKM_j in AKM_852718:
             lgo.log_output_eq(AKM_j)
-            lgo.log_output_excel(AKM_j)"""
+            lgo.log_output_excel(AKM_j)
 
     return Qflow_chill_852718, Qflow_heat_852718, Qflow_chill_903010, Qflow_heat_903010
 
