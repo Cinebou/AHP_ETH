@@ -15,7 +15,8 @@ class Balance_equation(adsorptionChiller_steadyState):
         self.X_ads=var[4]
         self.X_des=var[5]
 
-    """ term calculation """
+    """ term calculation 
+    """
     def mv_ads(self):
         p_evp = self.fluidProp.calc_VLE_T(self.T_evp).p_v
         X_ads_eq = self.wp.calc_x_pT(p_evp,self.T_ads)
@@ -85,7 +86,8 @@ class Balance_equation(adsorptionChiller_steadyState):
     """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
-    """ 6 balance equations"""
+    """ 6 balance equations
+    """
     def energy_evp(self):
         # enthalpy of in and out
         h_in = self.fluidProp.calc_VLE_liquid_T(self.T_cond).h_l

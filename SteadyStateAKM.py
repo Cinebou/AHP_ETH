@@ -8,9 +8,7 @@ from Balance_Equation import Balance_equation
 import numpy as np
 from scipy import optimize
 import adsEqui_refprop as adsEqui
-
 from fluidProp import VLEFluid
-import log_output as lgo
 
 
 class adsorptionChiller_steadyState:
@@ -20,14 +18,13 @@ class adsorptionChiller_steadyState:
     """
     
     def __init__(self,m_flow_evp=None,m_flow_cond=None,m_flow_ads=None,m_flow_des=None,
-                 cp_W = 4180,c_sor = 1000,cp_HX = 920,
+                 cp_W = 4184,c_sor = 1000,cp_HX = 379,
                  alphaA_evp_o=None,alphaA_cond_o=None,alphaA_ads_o=None,D_eff=None,
                  alphaA_evp_i=None,alphaA_cond_i=None,alphaA_ads_i=None,
                  m_sor=None,r_particle=None,m_HX=None,m_fl=None,
                  T_evp_in=None,T_cond_in=None,T_ads_in=None,T_des_in=None,t_cycle=None,
-                 corr_sor_c=1,corr_sor_t=0, corr_HX_c=1,corr_HX_t=0,corr_fl=1):
+                 corr_sor_c=1,corr_sor_t=0, corr_HX_c=1,corr_HX_t=0):
         """Constructor
-        
         Instantiate the adsorption chiller
         """
         #Mass flows of the heat transfer circuits
@@ -54,7 +51,6 @@ class adsorptionChiller_steadyState:
         self.m_sor = m_sor
         self.r_particle = r_particle
         self.m_HX = m_HX
-        self.m_fl = m_fl
         
         #Define working pair and fluid
         self.wp = adsEqui.workingpair('Silicagel123_water')
@@ -72,10 +68,10 @@ class adsorptionChiller_steadyState:
         self.corr_sor_t = corr_sor_t
         self.corr_HX_c = corr_HX_c
         self.corr_HX_t = corr_HX_t
-        self.corr_fl = corr_fl
         
         self.__internalParameters()
         
+
     def __internalParameters(self):
         """Calculates internal parameters
         """
@@ -99,15 +95,13 @@ class adsorptionChiller_steadyState:
         self.NTU_ads = self.kA_ads/self.mcp_ads
         self.NTU_des = self.kA_ads/self.mcp_des
 
-        """"""
         self.m_flow_sor = self.m_sor/self.t_cycle*2*self.corr_sor
         self.m_flow_HX = self.m_HX/self.t_cycle*2*self.corr_HX
-        self.m_flow_fl = self.m_fl/self.t_cycle*2*self.corr_fl
         
         self.mcp_sor = self.m_flow_sor*self.c_sor
         self.mcp_HX = self.m_flow_HX*self.cp_HX
-        self.mcp_fl = self.m_flow_fl*self.cp_W
         
+
     def __EqSystem(self,var):
         """Define the equation system, all unit is W (J/s)
         """
@@ -129,7 +123,7 @@ class adsorptionChiller_steadyState:
         self.__calcHeatFlows()
         return var
             
-            
+
     # summarize the results
     def __calcHeatFlows(self):
         self.T_evp_out = self.T_evp + (self.T_evp_in - self.T_evp)*np.exp(-self.NTU_evp)
