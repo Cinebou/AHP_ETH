@@ -32,3 +32,8 @@ class params:
               'corr_HX_c': 1.07286827e+00,
               'corr_HX_t':0
               }
+"""
+    def set_t_cycle_param(self):
+        param = self.Silica123_water_case1
+        return param
+"""

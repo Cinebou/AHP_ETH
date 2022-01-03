@@ -54,6 +54,7 @@ class VLEFluid:
         VLEFluid.p_v = VLE[1]
         return VLEFluid
 
+
     def calc_VLE_liquid_T(self,T,unit_T='K'):
         """Calculate the enthalpy of saturated liquid"""
         if unit_T=='K':
@@ -72,7 +73,6 @@ class VLEFluid:
         return VLEFluid
 
 
-
     # the parameter of saturated vapor calcurated from pressure 
     def calc_VLE_p(self,p):
         """Calculates vapor liquid equilibrium
@@ -81,7 +81,6 @@ class VLEFluid:
         
         returns: NumPy array   
         """
-
         q = 1 #fluid quality is saturated vapor
         prop_list = ["T",'p','v','u','h','s','q']
         VLE = fl.zs(["p","q"],[p, q],prop_list,self.fluid,Eh="default")

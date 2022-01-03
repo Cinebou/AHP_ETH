@@ -20,7 +20,7 @@ t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = lgo.read_pickle('./
 
 param = params()
 #AKM_852718 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p852718)
-AKM_903010 = SteadyStateAKM.adsorptionChiller_steadyState(**param.p903010)
+AKM_903010 = SteadyStateAKM.adsorptionChiller_steadyState(**param.Silica123_water_case1)
 
 
 def param_set(AKM_i,params):

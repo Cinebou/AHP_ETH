@@ -4,16 +4,14 @@ Created on Tue Nov 23 2021
 
 @author: Hibiki Kimura
 """
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import generatePerformanceMap_steadyState as gMap
 import SteadyStateAKM
-import log_output as lgo
 from param_database import params
-from pprint import pprint
 
-t_cycle_dyn, Qflow_chill_dyn, COP_dyn = lgo.read_pickle('./PerformanceMap/SCP_COP/results_dyn_852718.pickle')
+
+cycle_time_list = [400,500,600,700,800,1000,1200,1400,1600,1800,2000,2500,3000,3200,3500,4000,4500,5000]
+num_t = len(cycle_time_list)
 
 
 def calc_all():
@@ -33,7 +31,7 @@ def T3_cap(T_heat, T_cool, T_chill):
     AKM.T_des_in = T_heat;  AKM.T_ads_in = T_cool;  AKM.T_cond_in = T_cool;  AKM.T_evp_in = T_chill
     COP, Qflow = gMap.calc_map(AKM)
     t3 = []
-    t3.extend([[T_heat]*len(t_cycle_dyn), [T_cool]*len(t_cycle_dyn), [T_chill]*len(t_cycle_dyn), list(t_cycle_dyn), list(COP), list(Qflow)])
+    t3.extend([[T_heat]*num_t, [T_cool]*num_t, [T_chill]*num_t, list(cycle_time_list), list(COP), list(Qflow)])
     results_t3 = pd.DataFrame(t3, index = ['T_heat', 'T_cool', 'T_chill','t_Cycle','COP','Q_flow_cool_avg']).T
     print(results_t3)
     return results_t3
