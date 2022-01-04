@@ -119,7 +119,8 @@ class adsorptionChiller_steadyState:
         F[5] = self.two_mv_speed()
         return F
 
-
+    """
+    """
     def variables_set(self, var):
         self.T_evp=var[0]
         self.T_cond=var[1]
@@ -130,7 +131,7 @@ class adsorptionChiller_steadyState:
         return 0
 
 
-    """ term calculation 
+    """ circulation speed of working fluids between evaporator and adsorber, kg/s
     """
     def mv_ads(self):
         p_evp = self.fluidProp.calc_VLE_T(self.T_evp).p_v
@@ -139,6 +140,8 @@ class adsorptionChiller_steadyState:
         return mv
 
 
+    """ circulation speed of working fluids between desorber and condenser, kg/s
+    """
     def mv_des(self):
         p_cond = self.fluidProp.calc_VLE_T(self.T_cond).p_v
         X_des_eq = self.wp.calc_x_pT(p_cond, self.T_des)
@@ -146,6 +149,8 @@ class adsorptionChiller_steadyState:
         return mv
 
 
+    """ the energy taken by heat trasfer fluids from each component
+    """
     def HTF_energy(self, component):
         if component == 'evp':
             T_in  = self.T_evp_in
@@ -178,20 +183,21 @@ class adsorptionChiller_steadyState:
     """ inner heat exchange cycle """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
         Be careful for the direction of the current, (des - ads)
         Adsorber : positive + 
-        Desorber : negative -
-    """
+        Desorber : negative -"""
+
+    """ heat exchange of sorbent mass between adsorber and desorber """
     def HX_sor(self):
         heatX = self.mcp_sor*(self.T_des-self.T_ads) 
         return heatX
 
-    
+    """ heat exchange of heat transfer fluids between adsorber and desorber """
     def HX_fluids(self):
         h_des = self.wp.calc_h_ads_xT(self.X_des,self.T_des)
         h_ads = self.wp.calc_h_ads_xT(self.X_ads,self.T_ads)
         heatX = self.m_flow_sor * (self.X_des*h_des - self.X_ads*h_ads) 
         return heatX
 
-
+    """ heat exchange of heat exchanger(container) between adsorber and desorber """
     def HX_heatExchanger(self):
         T_HX_des = self.T_des + self.mcp_des/self.alphaA_ads_o*(self.T_des_in-self.T_des)*(1-np.exp(-self.NTU_des))
         T_HX_ads = self.T_ads + self.mcp_ads/self.alphaA_ads_o*(self.T_ads_in-self.T_ads)*(1-np.exp(-self.NTU_ads))
@@ -201,7 +207,7 @@ class adsorptionChiller_steadyState:
     """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
-    """ 6 balance equations
+    """ 6 balance equations. If the value becomes NAN, return unfeasible high value.
     """
     """ F[0] """
     def energy_evp(self):

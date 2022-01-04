@@ -12,8 +12,9 @@ import time
 import SteadyStateAKM
 import log_output as lgo
 from validation import Validater
+from generatePerformanceMap_steadyState import cycle_time_list
 
-
+# cycle time list is imported from 'generatePerformanceMap_steadyState'
 time_sta = time.time()
 
 #%% Read results from dynamic simulation
@@ -21,10 +22,6 @@ t_cycle_dyn_852718, Qflow_chill_dyn_852718, COP_dyn_852718 = Validater.read_pick
 t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = Validater.read_pickle('./PerformanceMap/SCP_COP/results_dyn_903010.pickle')
 Qflow_heat_dyn_852718 = Qflow_chill_dyn_852718/COP_dyn_852718
 Qflow_heat_dyn_903010 = Qflow_chill_dyn_903010/COP_dyn_903010
-
-
-#%% Fit steady-state model
-cycle_time_list = [300,400,500,600,700,800,1000,1200,1400,1600,1800,2000,2500,3000,3200,3500,4000,4500,5000]
 
 
 def performance(corr,cycle_time_list, logout = False):
