@@ -35,7 +35,9 @@ def calc_map(AKM_i):
 
     return COP, Q_flow_chill
 
-    
+
+""" calculate one line, example code
+"""
 def main():
     time_sta = time.time()
     param = params()

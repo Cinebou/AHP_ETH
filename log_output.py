@@ -9,6 +9,8 @@ Each Logging can be turned off by 'lg.setlevel(logging.WARN)'
 """
 
 class Log:
+        """ Define the Logging settings, log file, format, Log on/off
+        """
         def __init__(self):
                 # 'Temperature and Pressure log for each iteration
                 lg = logging.getLogger('TP')

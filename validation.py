@@ -19,7 +19,7 @@ class Validater:
 
     def __readData(self):
         # read data
-        self.stat_data = pd.read_csv('./Results/results_stat_andrej.csv')
+        self.stat_data = pd.read_csv('./Results/testCase.csv')
         self.dyn_data=pd.read_csv('./Results/results_dyn_all.csv')
 
     
