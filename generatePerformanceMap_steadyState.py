@@ -12,8 +12,9 @@ import time
 import matplotlib.pyplot as plt
 
 #%% cycle time
-cycle_time_list = [400,500,600,700,800,1000,1200,1400,1600,1800,2000,2500,3000,3200,3500,4000,4500,5000]
-
+# cycle_time_list = [500,600,700,800,900,1000,1100,1150,1200,1250,1300,1400]  # 13 points, SILIca gel 123
+# cycle_time_list = [500,600,700,800,900,1000,1100,1150,1200,1250,1300,1400] # 12 points, AQSOA
+cycle_time_list = [300,400,500,600,700,800,1000,1200,1400,1600,1800,2000,2500,3000,3200,3500,4000,4500,5000]
 
 """ solving the AKM for all cycle time list, return list
 """

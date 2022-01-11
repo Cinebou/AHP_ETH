@@ -18,8 +18,8 @@ from generatePerformanceMap_steadyState import cycle_time_list
 time_sta = time.time()
 
 #%% Read results from dynamic simulation
-t_cycle_dyn_852718, Qflow_chill_dyn_852718, COP_dyn_852718 = Validater.read_pickle('./PerformanceMap/SCP_COP/results_dyn_852718.pickle')
-t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = Validater.read_pickle('./PerformanceMap/SCP_COP/results_dyn_903010.pickle')
+t_cycle_dyn_852718, Qflow_chill_dyn_852718, COP_dyn_852718 = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_Andrej_Silica_852718.pickle')
+t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_Andrej_Silica_903010.pickle')
 Qflow_heat_dyn_852718 = Qflow_chill_dyn_852718/COP_dyn_852718
 Qflow_heat_dyn_903010 = Qflow_chill_dyn_903010/COP_dyn_903010
 
@@ -33,7 +33,7 @@ def performance(corr,cycle_time_list, logout = False):
               'm_sor':2.236,
               'r_particle':0.00045,
               'cp_HX':379,
-              'cp_sor':1000,
+              'cp_sor':778,
               'cp_W':4184,
               'm_HX':6.2,
 
@@ -52,9 +52,9 @@ def performance(corr,cycle_time_list, logout = False):
               'alphaA_ads_i':corr[2],
               'D_eff':corr[3],
               'corr_sor_c': corr[4],
-              'corr_sor_t': 0,
+              'corr_sor_t': corr[6],
               'corr_HX_c': corr[5],
-              'corr_HX_t':0
+              'corr_HX_t':corr[7]
               } for t_cycle_i in cycle_time_list]
     
     
@@ -76,7 +76,7 @@ def performance(corr,cycle_time_list, logout = False):
               'm_sor':2.236,
               'r_particle':0.00045,
               'cp_HX':379,
-              'cp_sor':1000,
+              'cp_sor':778,
               'cp_W':4184,
               'm_HX':6.2,
 
@@ -95,9 +95,9 @@ def performance(corr,cycle_time_list, logout = False):
               'alphaA_ads_i':corr[2],
               'D_eff':corr[3],
               'corr_sor_c': corr[4],
-              'corr_sor_t': 0,
+              'corr_sor_t': corr[6],
               'corr_HX_c': corr[5],
-              'corr_HX_t':0
+              'corr_HX_t':corr[7]
               } for t_cycle_i in cycle_time_list]
     
     AKM_903010 = [SteadyStateAKM.adsorptionChiller_steadyState(**param_i) for param_i in param_903010]
@@ -123,8 +123,8 @@ def lsq_perf(corr,Qflow_chill_target_852718,Qflow_heat_target_852718,Qflow_chill
     lsq_Qflows = np.concatenate((Qflow_chill_852718-Qflow_chill_target_852718,Qflow_heat_852718-Qflow_heat_target_852718, Qflow_chill_903010-Qflow_chill_target_903010,Qflow_heat_903010-Qflow_heat_target_903010))
     return lsq_Qflows
 
-corr0 = np.array([1.11795458e+02, 6.38258355e+03, 1.07569100e+03, 2.13512270e-10, 7.82703451e-01, 1.64788427e+00])
-bounds = ([50,50,50,1e-11,0,0],[10000,10000,10000,1e-9,5,5])
+corr0 = np.array([176, 3174, 151, 1.8e-10, 0.697 , 0.461, 0.0017, 0.051])
+bounds = ([50,50,50,1e-11,0,0,0,0],[10000,10000,10000,1e-9,5,5,1,1])
 args = (Qflow_chill_dyn_852718,Qflow_heat_dyn_852718, Qflow_chill_dyn_903010,Qflow_heat_dyn_903010)
 res_perf = least_squares(lsq_perf, corr0, bounds=bounds, args=args,  verbose=1)
 
