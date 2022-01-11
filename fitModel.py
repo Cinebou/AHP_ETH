@@ -18,8 +18,8 @@ from generatePerformanceMap_steadyState import cycle_time_list
 time_sta = time.time()
 
 #%% Read results from dynamic simulation
-t_cycle_dyn_852718, Qflow_chill_dyn_852718, COP_dyn_852718 = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_Andrej_Silica_852718.pickle')
-t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_Andrej_Silica_903010.pickle')
+t_cycle_dyn_852718, Qflow_chill_dyn_852718, COP_dyn_852718 = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_AQUASOA_water_852718.pickle')
+t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_AQUASOA_water_903010.pickle')
 Qflow_heat_dyn_852718 = Qflow_chill_dyn_852718/COP_dyn_852718
 Qflow_heat_dyn_903010 = Qflow_chill_dyn_903010/COP_dyn_903010
 
@@ -36,6 +36,10 @@ def performance(corr,cycle_time_list, logout = False):
               'cp_sor':778,
               'cp_W':4184,
               'm_HX':6.2,
+
+              # working pair
+              'sorbent':'AqsoaZ02_water',
+              'fluid':'water',
 
               # 85 27 18
               'T_evp_in':291.15,
@@ -79,6 +83,10 @@ def performance(corr,cycle_time_list, logout = False):
               'cp_sor':778,
               'cp_W':4184,
               'm_HX':6.2,
+
+              # working pair
+              'sorbent':'AqsoaZ02_water',
+              'fluid':'water',
 
               # 90 30 10
               'T_evp_in':283.15,

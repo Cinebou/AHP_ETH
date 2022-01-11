@@ -23,7 +23,10 @@ class adsorptionChiller_steadyState:
                  alphaA_evp_i=None,alphaA_cond_i=None,alphaA_ads_i=None,
                  m_sor=None,r_particle=None,m_HX=None,m_fl=None,
                  T_evp_in=None,T_cond_in=None,T_ads_in=None,T_des_in=None,t_cycle=None,
+                 sorbent = 'Silicagel123_water', fluid = 'water',
                  corr_sor_c=1,corr_sor_t=0, corr_HX_c=1,corr_HX_t=0):
+
+                 
         """Constructor
         Instantiate the adsorption chiller
         """
@@ -53,8 +56,8 @@ class adsorptionChiller_steadyState:
         self.m_HX = m_HX
         
         #Define working pair and fluid
-        self.wp = adsEqui.workingpair('Silicagel123_water')
-        self.fluidProp = VLEFluid('water')
+        self.wp = adsEqui.workingpair(sorbent)
+        self.fluidProp = VLEFluid(fluid)
         
         #Operating parameters
         self.T_evp_in = T_evp_in
