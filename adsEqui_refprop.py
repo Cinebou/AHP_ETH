@@ -352,3 +352,8 @@ class workingpair:
         #print(  dh_bond , ",dh_bond, ", self.fluidProp.calc_VLE_liquid_T(T).h_l ,",self.fluidProp.calc_VLE_liquid_T(T).h_l, " ,h_ads, ",h_ads")
 
         return h_ads
+
+    
+    def isotherm_DA(self):
+        q_o = self.wp_type
+        return 0

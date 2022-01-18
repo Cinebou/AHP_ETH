@@ -18,9 +18,11 @@ num_t = len(cycle_time_list)
 """ calculation of all data temperature triples, range is defined by myself
 """
 def calc_all_myself():
-    """ temperature range """
+    """ temperature range 
+    """
     heat_init,  heat_fin  = 60, 90
-    cool_init,  cool_fin  = 24, 40
+    #cool_init,  cool_fin  = 24, 40
+    cool_init,  cool_fin  = 15, 23
     chill_init, chill_fin = 10, 20
 
     results_stat = pd.DataFrame([], index = ['T_heat', 'T_cool', 'T_chill','t_Cycle','COP','Q_flow_cool_avg']).T
@@ -28,9 +30,10 @@ def calc_all_myself():
     for T_heat in range(heat_init,heat_fin+1, 2):        
         for T_cool in range(cool_init,cool_fin+1, 2):        
             for T_chill in range(chill_init,chill_fin+1, 2):
-                """Mahbubul Muttakin, Sourav Mitra et al. International Journal of Heat and Mass Transfer, 122, 7 2018, Fig 8"""
+                """Mahbubul Muttakin, Sourav Mitra et al. International Journal of Heat and Mass Transfer, 122, 7 2018, Fig 8
+                """
                 # the feasible region of heating temp and rejecting temp
-                if T_heat > 2.4928*T_cool - 13.768: 
+                if (T_heat > 2.4928*T_cool - 13.768) and (T_heat>T_cool>T_chill): 
                     result_temp = T3_cap(T_heat+273.15, T_cool+273.15, T_chill+273.15)
                     results_stat = pd.concat([results_stat, result_temp])
 
@@ -63,7 +66,7 @@ def calc_all():
 def T3_cap(T_heat, T_cool, T_chill):
     """ generate and initialze the AKM instance for each calculation """
     param = params()
-    AKM = SteadyStateAKM.adsorptionChiller_steadyState(**param.Silica123_water_case1)
+    AKM = SteadyStateAKM.adsorptionChiller_steadyState(**param.Silica123_water_fit)
 
     """ reset the temperature setting """
     AKM.T_des_in = T_heat;  AKM.T_ads_in = T_cool;  AKM.T_cond_in = T_cool;  AKM.T_evp_in = T_chill
@@ -85,7 +88,7 @@ def T3_cap(T_heat, T_cool, T_chill):
 def main():
     stat_data_point = calc_all_myself()
     result = stat_data_point.sort_values(['T_heat','T_cool', 'T_chill','t_Cycle'])
-    result.to_csv('Results/Silica_gel_Andrej.csv')
+    result.to_csv('Results/Silica_water_stat_cool.csv')
 
 
 if __name__=='__main__':

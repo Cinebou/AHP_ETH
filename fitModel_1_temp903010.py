@@ -18,13 +18,17 @@ from generatePerformanceMap_steadyState import cycle_time_list
 time_sta = time.time()
 
 #%% Read results from dynamic simulation
-t_cycle_dyn_852718, Qflow_chill_dyn_852718, COP_dyn_852718 = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_Silica123_water_852718.pickle')
+#t_cycle_dyn_852718, Qflow_chill_dyn_852718, COP_dyn_852718 = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_Silica123_water_852718.pickle')
 t_cycle_dyn_903010, Qflow_chill_dyn_903010, COP_dyn_903010 = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_Silica123_water_903010.pickle')
-Qflow_heat_dyn_852718 = Qflow_chill_dyn_852718/COP_dyn_852718
+#Qflow_heat_dyn_852718 = Qflow_chill_dyn_852718/COP_dyn_852718
 Qflow_heat_dyn_903010 = Qflow_chill_dyn_903010/COP_dyn_903010
 
 
 def performance(corr,cycle_time_list, logout = False):
+
+    var_guess = np.array([291.15,303.15,303.15,348.15,0.2,0.05])
+
+    """
     param_852718 = [{
               'm_flow_evp':0.191, 
               'm_flow_cond':0.111,
@@ -56,22 +60,20 @@ def performance(corr,cycle_time_list, logout = False):
               'alphaA_ads_i':corr[2],
               'D_eff':corr[3],
               'corr_sor_c': corr[4],
-              'corr_sor_t':corr[6],
+              'corr_sor_t': corr[6],
               'corr_HX_c': corr[5],
               'corr_HX_t':corr[7]
               } for t_cycle_i in cycle_time_list]
     
     
     AKM_852718 = [SteadyStateAKM.adsorptionChiller_steadyState(**param_i) for param_i in param_852718]
-
-    var_guess = np.array([291.15,303.15,303.15,348.15,0.2,0.05])
     
     [AKM_i.solve(var_guess) for AKM_i in AKM_852718]
     
     Qflow_chill_852718 = np.array([AKM_i.Q_flow_evp for AKM_i in AKM_852718])
     
     Qflow_heat_852718 = np.array([AKM_i.Q_flow_des for AKM_i in AKM_852718])
-    
+    """
     param_903010 = [{
               'm_flow_evp':0.191, 
               'm_flow_cond':0.111,
@@ -103,9 +105,9 @@ def performance(corr,cycle_time_list, logout = False):
               'alphaA_ads_i':corr[2],
               'D_eff':corr[3],
               'corr_sor_c': corr[4],
-              'corr_sor_t':corr[6],
+              'corr_sor_t': corr[6],
               'corr_HX_c': corr[5],
-              'corr_HX_t':corr[7],
+              'corr_HX_t':corr[7]
               } for t_cycle_i in cycle_time_list]
     
     AKM_903010 = [SteadyStateAKM.adsorptionChiller_steadyState(**param_i) for param_i in param_903010]
@@ -116,24 +118,24 @@ def performance(corr,cycle_time_list, logout = False):
     
     Qflow_heat_903010 = np.array([AKM_i.Q_flow_des for AKM_i in AKM_903010])
 
-    Qflow_chill_852718 = 2*Qflow_chill_852718; Qflow_heat_852718 = 2*Qflow_heat_852718; Qflow_chill_903010 = 2*Qflow_chill_903010; Qflow_heat_903010 = 2*Qflow_heat_903010
+    Qflow_chill_903010 = 2*Qflow_chill_903010; Qflow_heat_903010 = 2*Qflow_heat_903010
     
     if logout:
         for AKM_i in AKM_903010:
             lgo.log_output_excel(AKM_i)
-        for AKM_j in AKM_852718:
-            lgo.log_output_excel(AKM_j)
+        #for AKM_j in AKM_852718:
+        #    lgo.log_output_excel(AKM_j)
 
-    return Qflow_chill_852718, Qflow_heat_852718, Qflow_chill_903010, Qflow_heat_903010
+    return Qflow_chill_903010, Qflow_heat_903010
 
-def lsq_perf(corr,Qflow_chill_target_852718,Qflow_heat_target_852718,Qflow_chill_target_903010,Qflow_heat_target_903010):
-    Qflow_chill_852718, Qflow_heat_852718, Qflow_chill_903010, Qflow_heat_903010 = performance(corr,cycle_time_list)
-    lsq_Qflows = np.concatenate((Qflow_chill_852718-Qflow_chill_target_852718,Qflow_heat_852718-Qflow_heat_target_852718, Qflow_chill_903010-Qflow_chill_target_903010,Qflow_heat_903010-Qflow_heat_target_903010))
+def lsq_perf(corr,Qflow_chill_target_903010,Qflow_heat_target_903010):
+    Qflow_chill_903010, Qflow_heat_903010 = performance(corr,cycle_time_list)
+    lsq_Qflows = np.concatenate((Qflow_chill_903010-Qflow_chill_target_903010,Qflow_heat_903010-Qflow_heat_target_903010))
     return lsq_Qflows
 
-corr0 = np.array([176, 3174, 151, 1.8e-10,  1.28183169e+00, 1.58191267e+00])
-bounds = ([50,50,50,1e-11,0,0],[10000,10000,10000,1e-9,5,5])
-args = (Qflow_chill_dyn_852718,Qflow_heat_dyn_852718, Qflow_chill_dyn_903010,Qflow_heat_dyn_903010)
+corr0 = np.array([173, 3174, 151, 1.8e-10, 0.7 , 0.461, 0.1, 0.1])
+bounds = ([50,50,50,1e-11,0,0,0,0],[10000,10000,10000,1e-9,5,5,1,1])
+args = (Qflow_chill_dyn_903010,Qflow_heat_dyn_903010)
 #res_perf = least_squares(lsq_perf, corr0, bounds=bounds, args=args,  verbose=1)
 
 
@@ -143,35 +145,30 @@ print("calculation time ::  ",time_end - time_sta," sec")
 #print(res_perf.x)
 
 # silica gel 123 hibiki
-x = [9.49999929e+01, 3.87600000e+03, 2.96999988e+02, 6.07052737e-10, 6.99997583e-01, 4.60999771e-01, 1.68411995e-03, 5.09992928e-02]
-x_no_time = [1.36041482e+02, 3.17402235e+03, 2.08242143e+02, 9.70896677e-10,9.21710287e-01, 2.03851340e+00]
+x_1temp = [1.00537394e+02, 3.42943168e+03, 5.05362201e+02, 2.39364061e-10, 2.56628646e-01, 5.37264184e-01, 8.22035411e-03, 5.17084931e-02]
+
 #%% Plot results
 plt.figure()
-#Qflow_chill_stat_852718, Qflow_heat_stat_852718, Qflow_chill_stat_903010, Qflow_heat_stat_903010, = performance(res_perf.x,cycle_time_list)
-Qflow_chill_stat_852718, Qflow_heat_stat_852718, Qflow_chill_stat_903010, Qflow_heat_stat_903010, = performance(x,cycle_time_list)
-COP_stat_852718=Qflow_chill_stat_852718/Qflow_heat_stat_852718
+#Qflow_chill_stat_903010, Qflow_heat_stat_903010, = performance(res_perf.x,cycle_time_list)
+Qflow_chill_stat_903010, Qflow_heat_stat_903010, = performance(x_1temp,cycle_time_list)
+#COP_stat_852718=Qflow_chill_stat_852718/Qflow_heat_stat_852718
 COP_stat_903010=Qflow_chill_stat_903010/Qflow_heat_stat_903010
-plt.plot(COP_dyn_852718,Qflow_chill_dyn_852718,'bo',  label='dyn  $85^{\circ}C \quad 27^{\circ}C \quad 18^{\circ}C$')
-plt.plot(COP_stat_852718,Qflow_chill_stat_852718,'b-',label='stat $85^{\circ}C \quad 27^{\circ}C \quad 18^{\circ}C$')
-plt.plot(COP_dyn_903010,Qflow_chill_dyn_903010,'ro',  label='dyn  $90^{\circ}C \quad 30^{\circ}C \quad 10^{\circ}C$')
-plt.plot(COP_stat_903010,Qflow_chill_stat_903010,'r-',label='stat $90^{\circ}C \quad 30^{\circ}C \quad 10^{\circ}C$')
+#plt.plot(COP_dyn_852718,Qflow_chill_dyn_852718,'bo',label='dyn 85 27 18')
+#plt.plot(COP_stat_852718,Qflow_chill_stat_852718,'b-',label='stat 85 27 18')
+plt.plot(COP_dyn_903010,Qflow_chill_dyn_903010,'ro',label='dynamic')
+plt.plot(COP_stat_903010,Qflow_chill_stat_903010,'r-',label='short-cut')
 
 plt.xlabel('COP',fontsize=15)
-plt.ylabel('$Q_{cool}$  in  W',fontsize=15)
-plt.legend(fontsize = 12)
+plt.ylabel('$Q_{cool}$ in W',fontsize=15)
+plt.xlim(0.18,0.29)
+plt.ylim(400,600)
+plt.legend(fontsize = 15)
 
-#plt.xlim(0.18, 0.48)
-#plt.ylim(400, 1000)
+error = Validater.ARE_one(COP_dyn_903010,Qflow_chill_dyn_903010,COP_stat_903010,Qflow_chill_stat_903010)
+print(error)
 vl = Validater()
-error = Validater.ARE(COP_dyn_852718,Qflow_chill_dyn_852718,COP_stat_852718,Qflow_chill_stat_852718,COP_dyn_903010,Qflow_chill_dyn_903010,COP_stat_903010,Qflow_chill_stat_903010)
-error903010  = Validater.ARE_one(COP_dyn_903010,Qflow_chill_dyn_903010,COP_stat_903010,Qflow_chill_stat_903010)
-error852718 =  Validater.ARE_one(COP_dyn_852718,Qflow_chill_dyn_852718,COP_stat_852718,Qflow_chill_stat_852718)
-print('total',error)
-print('903010',error903010)
-print('852718',error852718)
-
-RMSD = vl.RMSD(COP_dyn_852718,COP_stat_852718,COP_dyn_903010,COP_stat_903010, Qflow_chill_dyn_852718,Qflow_chill_stat_852718,Qflow_chill_dyn_903010,Qflow_chill_stat_903010)
+RMSD = vl.RMSD_one(COP_dyn_903010,COP_stat_903010,Qflow_chill_dyn_903010,Qflow_chill_stat_903010)
 print('RMSD = ', RMSD)
-plt.savefig('Fig/fitting_silica_notime.eps')
+plt.savefig('Fig/fitting_silica_1temp.eps')
 plt.show()
 
