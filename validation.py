@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import log_output as lgo
 import pickle 
 import numpy as np
+from math import isnan
 
 
 class Validater:
@@ -20,7 +21,7 @@ class Validater:
 
     def __readData(self):
         # read data
-        self.stat_data = pd.read_csv('./Results/Silica_water_stat.csv')
+        self.stat_data = pd.read_csv('./Results/Silica_water_stat_NAN01.csv')
         self.dyn_data=pd.read_csv('./Results/dyn_Silica_all.csv')
 
     
@@ -124,6 +125,7 @@ class Validater:
         COPerror_sum = 0
         Qerror_sum = 0
         count=0; max_dev_COP = 0; max_dev_Qflow=0
+        nan_count=0
         for index, row in self.stat_data.iterrows():
             # take the data from stat_file
             T_chill_s = row['T_chill']
@@ -140,21 +142,24 @@ class Validater:
             self.Qflow_d_temp = float(dyn_line['Qflows'])
 
             # add the results
-            if self.COP_d_temp>0.3:
+            if (not isnan(self.COP_s_temp)) and (not isnan(self.Qflow_s_temp)):
                 self.__appendResults()
                 COPerror_sum += self.ARE_COP()
                 Qerror_sum   += self.ARE_Qflow()
                 count+=1
                 max_dev_COP = max(max_dev_COP,self.ARE_COP())
                 max_dev_Qflow=max(max_dev_Qflow,self.ARE_Qflow())
+            else:
+                nan_count+=1
 
-        # evaluate the deviation
+        
         COPerror_sum /= count
         Qerror_sum /= count
         print('ARE of COP is :  ', COPerror_sum)
         print('ARE of Qcool is :  ', Qerror_sum)
         print('max deviation in COP is : ', max_dev_COP)
         print('max deviation in Qflow is  ', max_dev_Qflow)
+        print('nan points : ',nan_count,' / ',len(self.stat_data))
         self.show_graph_multiple()
 
 
@@ -184,8 +189,8 @@ class Validater:
         plt.plot([0,1500],[0,1500],color='orange',lw=2)
         plt.xlabel('$Q_{cool}^{dyn}$  in  W',fontsize=15)
         plt.ylabel('$Q_{cool}^{stat}$  in  W',fontsize=15)
-        plt.ylim(0,2500)
-        plt.xlim(0,2000)
+        plt.ylim(0,1500)
+        plt.xlim(0,1500)
         plt.rcParams['figure.subplot.bottom'] = 0.15
         plt.rcParams['lines.linewidth'] = 3
 

@@ -118,7 +118,7 @@ def performance(corr,cycle_time_list, logout = False):
     
     Qflow_heat_903010 = np.array([AKM_i.Q_flow_des for AKM_i in AKM_903010])
 
-    Qflow_chill_903010 = 2*Qflow_chill_903010; Qflow_heat_903010 = 2*Qflow_heat_903010
+    #Qflow_chill_903010 = 2*Qflow_chill_903010; Qflow_heat_903010 = 2*Qflow_heat_903010
     
     if logout:
         for AKM_i in AKM_903010:

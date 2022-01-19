@@ -22,7 +22,7 @@ class adsorptionChiller_steadyState:
                  alphaA_evp_o=None,alphaA_cond_o=None,alphaA_ads_o=None,D_eff=None,
                  alphaA_evp_i=None,alphaA_cond_i=None,alphaA_ads_i=None,
                  m_sor=None,r_particle=None,m_HX=None,m_fl=None,
-                 T_evp_in=None,T_cond_in=None,T_ads_in=None,T_des_in=None,t_cycle=None,
+                 T_evp_in=None,T_cond_in=None,T_ads_in=None,T_des_in=None,t_cycle=None, k_Q=2,
                  sorbent = 'Silicagel123_water', fluid = 'water',
                  corr_sor_c=1,corr_sor_t=0, corr_HX_c=1,corr_HX_t=0):
 
@@ -71,10 +71,14 @@ class adsorptionChiller_steadyState:
         self.corr_sor_t = corr_sor_t
         self.corr_HX_c = corr_HX_c
         self.corr_HX_t = corr_HX_t
+        self.k_Q = k_Q
 
         # optimizer recorder, which is used for blocking value returned when it's NAN value
         initial_block_value = 10000
         self.F_values = [initial_block_value]*6
+
+        # threshold of the convergence of the objective function
+        self.error_threshold = 0.05
         
         self.__internalParameters()
         
@@ -110,7 +114,7 @@ class adsorptionChiller_steadyState:
         
 
     def __EqSystem(self,var):
-        """Define the equation system, all unit is W (J/s)
+        """Define the equation system, unit is W (J/s) for energy balance, unit in (kg/s) for mass balance
         """
         self.variables_set(var)
         F = np.empty((6))           
@@ -292,6 +296,8 @@ class adsorptionChiller_steadyState:
         var = optimize.root(self.__EqSystem,var_guess)
         self.T_evp, self.T_cond, self.T_ads, self.T_des, self.X_ads, self.X_des = var.x
         self.__calcHeatFlows()
+
+        self.convergency_check() # this check make the calculation slow
         return var
             
 
@@ -303,11 +309,26 @@ class adsorptionChiller_steadyState:
         self.T_ads_out = self.T_ads + (self.T_ads_in - self.T_ads)*np.exp(-self.NTU_ads)
         self.T_des_out = self.T_des + (self.T_des_in - self.T_des)*np.exp(-self.NTU_des)
         
-        self.Q_flow_evp = self.mcp_evp*(self.T_evp_in - self.T_evp_out)
-        self.Q_flow_cond = self.mcp_cond*(self.T_cond_in - self.T_cond_out)
-        self.Q_flow_ads = self.mcp_ads*(self.T_ads_in - self.T_ads_out)
-        self.Q_flow_des = self.mcp_des*(self.T_des_in - self.T_des_out)
+        self.Q_flow_evp = self.mcp_evp*(self.T_evp_in - self.T_evp_out) * self.k_Q
+        self.Q_flow_cond = self.mcp_cond*(self.T_cond_in - self.T_cond_out) * self.k_Q
+        self.Q_flow_ads = self.mcp_ads*(self.T_ads_in - self.T_ads_out) * self.k_Q
+        self.Q_flow_des = self.mcp_des*(self.T_des_in - self.T_des_out) * self.k_Q
         
         self.COP = self.Q_flow_evp/self.Q_flow_des
         self.SCP = self.Q_flow_evp/self.m_sor
+
+
+    """check if the objective function actually convergent. if not, return None for the performance 
+    """
+    def convergency_check(self):
+        # unit is W[J/s](e02 ~ e03 order), mv[kg/s](e-3 ~ e-4 order)
+        # the order is adjusted by multiplying 1e05
+        ob_F = [abs(self.energy_ads()), abs(self.energy_des()), abs(self.energy_evp()), abs(self.energy_cond()), 1e05*abs(self.two_mv_speed()), 1e05*abs(self.mass_in_bed())]
+
+        # when the final objective function is over threshold, the results is None
+        self.error_threshold = 0.1
+        if any(F > self.error_threshold for F in ob_F):
+            self.Q_flow_evp = None
+            self.COP = None
+    
     

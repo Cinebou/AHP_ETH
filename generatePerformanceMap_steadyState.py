@@ -30,7 +30,7 @@ def calc_map(AKM_i):
     for num, t_cycle in enumerate(t_cycle_array):
         AKM_i.t_cycle = t_cycle
         AKM_i.solve(var_guess)
-        Q_flow_chill[num] = AKM_i.Q_flow_evp * 2
+        Q_flow_chill[num] = AKM_i.Q_flow_evp
         COP[num] = AKM_i.COP
         #lgo.log_output_excel(AKM_i)
 

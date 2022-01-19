@@ -9,6 +9,7 @@ import generatePerformanceMap_steadyState as gMap
 import SteadyStateAKM
 from param_database import params
 from generatePerformanceMap_steadyState import cycle_time_list
+import time
 
 
 # cycle time list is imported from 'generatePerformanceMap_steadyState'
@@ -21,8 +22,8 @@ def calc_all_myself():
     """ temperature range 
     """
     heat_init,  heat_fin  = 60, 90
-    #cool_init,  cool_fin  = 24, 40
-    cool_init,  cool_fin  = 15, 23
+    cool_init,  cool_fin  = 24, 40
+    #cool_init,  cool_fin  = 15, 23
     chill_init, chill_fin = 10, 20
 
     results_stat = pd.DataFrame([], index = ['T_heat', 'T_cool', 'T_chill','t_Cycle','COP','Q_flow_cool_avg']).T
@@ -86,9 +87,14 @@ def T3_cap(T_heat, T_cool, T_chill):
 """ calc multiple points and store in .csv file
 """
 def main():
+    time_st = time.time()
     stat_data_point = calc_all_myself()
     result = stat_data_point.sort_values(['T_heat','T_cool', 'T_chill','t_Cycle'])
-    result.to_csv('Results/Silica_water_stat_cool.csv')
+    result.to_csv('Results/Silica_water_stat_NAN01.csv')
+
+    time_fin = time.time()
+    print(' calculation time  : ', time_fin - time_st)
+    print(' calc time for one case is : ', (time_fin - time_st)/len(result))
 
 
 if __name__=='__main__':
