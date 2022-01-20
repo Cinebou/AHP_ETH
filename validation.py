@@ -21,13 +21,19 @@ class Validater:
 
     def __readData(self):
         # read data
-        self.stat_data = pd.read_csv('./Results/Silica_water_stat_NAN01.csv')
+        self.stat_data = pd.read_csv('./Results/Silica_water_stat_coolNAN01_adjust.csv')
         self.dyn_data=pd.read_csv('./Results/dyn_Silica_all.csv')
 
     
     def __initResult(self):
         self.stat_COP = []; self.dyn_COP=[]
         self.stat_Qflow=[]; self.dyn_Qflow=[]
+        self.COPerror_sum = 0
+        self.Qerror_sum = 0
+        self.max_dev_COP = 0 
+        self.max_dev_Qflow=0
+        header = 'T_chill, T_reject, T_heat, t_Cycle, dyn_COP, dyn_Qflow'
+        lgo.log_excel_msg(header)
 
     def __appendResults(self):
         self.stat_COP.append(self.COP_s_temp)
@@ -121,11 +127,10 @@ class Validater:
         self.__readData()
         self.__initResult()
 
-        # error function
-        COPerror_sum = 0
-        Qerror_sum = 0
-        count=0; max_dev_COP = 0; max_dev_Qflow=0
+        # error count
         nan_count=0
+
+        # for each data in stat file, compare with the dynamic simulation
         for index, row in self.stat_data.iterrows():
             # take the data from stat_file
             T_chill_s = row['T_chill']
@@ -141,28 +146,50 @@ class Validater:
             self.COP_d_temp = float(dyn_line['COP'])
             self.Qflow_d_temp = float(dyn_line['Qflows'])
 
-            # add the results
+            # if the stat value is not NAN, move on to processing data. if not, record on log file
             if (not isnan(self.COP_s_temp)) and (not isnan(self.Qflow_s_temp)):
-                self.__appendResults()
-                COPerror_sum += self.ARE_COP()
-                Qerror_sum   += self.ARE_Qflow()
-                count+=1
-                max_dev_COP = max(max_dev_COP,self.ARE_COP())
-                max_dev_Qflow=max(max_dev_Qflow,self.ARE_Qflow())
+                self.arrange_results()
+
             else:
                 nan_count+=1
+                self.record_error(T_chill_s, T_reject_s, T_heat_s, t_Cycle_s)
 
-        
-        COPerror_sum /= count
-        Qerror_sum /= count
-        print('ARE of COP is :  ', COPerror_sum)
-        print('ARE of Qcool is :  ', Qerror_sum)
-        print('max deviation in COP is : ', max_dev_COP)
-        print('max deviation in Qflow is  ', max_dev_Qflow)
-        print('nan points : ',nan_count,' / ',len(self.stat_data))
+
+        self.print_results(nan_count)
         self.show_graph_multiple()
 
 
+    # append to the results list, calculate max and average deviation
+    def arrange_results(self):
+        self.__appendResults()
+        self.COPerror_sum += self.ARE_COP()
+        self.Qerror_sum   += self.ARE_Qflow()
+        self.max_dev_COP = max(self.max_dev_COP,self.ARE_COP())
+        self.max_dev_Qflow=max(self.max_dev_Qflow,self.ARE_Qflow())
+        return 0
+
+
+    # record error on 'Log/validate.csv'
+    def record_error(self, T_chill_s, T_reject_s, T_heat_s, t_Cycle_s):
+        msg = '{},{},{},{}, {},{}'.format(T_chill_s, T_reject_s, T_heat_s, t_Cycle_s, self.COP_d_temp, self.Qflow_d_temp)
+        lgo.log_excel_msg(msg)
+        return 0
+
+
+    # output the summary of the results on console
+    def print_results(self, nan_count):
+        num_data = len(self.stat_data) - nan_count
+        self.COPerror_sum /= num_data
+        self.Qerror_sum /= num_data
+        print('ARE of COP is :  ', self.COPerror_sum)
+        print('ARE of Qcool is :  ', self.Qerror_sum)
+        print('max deviation in COP is : ', self.max_dev_COP)
+        print('max deviation in Qflow is  ', self.max_dev_Qflow)
+        print('nan points : ',nan_count,' / ',len(self.stat_data))
+        return 0
+
+
+    # show the performace map comparison of COP and cooling capacity
     def show_graph_multiple(self):
         # COP figure
         plt.figure()
@@ -178,7 +205,7 @@ class Validater:
         plt.rcParams['figure.subplot.bottom'] = 0.15
         plt.rcParams['lines.linewidth'] = 3
 
-        plt.savefig('Fig/COP_silica.eps')
+        plt.savefig('Fig/COP_silica_cool.eps')
 
         # SCP figure
         plt.figure()
@@ -194,15 +221,14 @@ class Validater:
         plt.rcParams['figure.subplot.bottom'] = 0.15
         plt.rcParams['lines.linewidth'] = 3
 
-        plt.savefig('Fig/Qflow_silica.eps')
+        plt.savefig('Fig/Qflow_silica_cool.eps')
         plt.show() 
+
+
 
 def main():
     VL = Validater()
     VL.validate_data()
 
-
 if __name__ == '__main__':
     main()
-
-
