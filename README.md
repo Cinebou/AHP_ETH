@@ -61,6 +61,6 @@ python validation.py
 * TILMedia for Modelica (to calculate dynamic simulation in DYMOLA)
 
 # Author
-Andrej  Gibelhaus
-Hibiki Kimura
-Fabian Mayer
+Andrej  Gibelhaus  
+Hibiki Kimura  
+Fabian Mayer  
