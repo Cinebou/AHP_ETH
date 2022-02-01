@@ -81,7 +81,6 @@ class Validater:
 
         # error count
         nan_count=0
-        c=n=0
         # for each data in stat file, compare with the dynamic simulation
         for index, row in self.stat_data.iterrows():
             # take the data from stat_file
