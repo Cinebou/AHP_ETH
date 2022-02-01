@@ -16,8 +16,6 @@ Log/*.csv
 #output data
 Results/*
 
-#test code
-test_code/
 
 .vscode/
 
