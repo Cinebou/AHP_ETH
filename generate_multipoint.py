@@ -22,8 +22,8 @@ def calc_all_myself():
     """ temperature range 
     """
     heat_init,  heat_fin  = 60, 90
-    cool_init,  cool_fin  = 24, 40
-    #cool_init,  cool_fin  = 15, 23
+    #cool_init,  cool_fin  = 24, 40
+    cool_init,  cool_fin  = 15, 23
     chill_init, chill_fin = 10, 20
 
     results_stat = pd.DataFrame([], index = ['T_heat', 'T_cool', 'T_chill','t_Cycle','COP','Q_flow_cool_avg']).T
@@ -67,7 +67,7 @@ def calc_all():
 def T3_cap(T_heat, T_cool, T_chill):
     """ generate and initialze the AKM instance for each calculation """
     param = params()
-    AKM = SteadyStateAKM.adsorptionChiller_steadyState(**param.Silica123_water_fit)
+    AKM = SteadyStateAKM.adsorptionChiller_steadyState(**param.Silica123_water_fit0121)
 
     """ reset the temperature setting """
     AKM.T_des_in = T_heat;  AKM.T_ads_in = T_cool;  AKM.T_cond_in = T_cool;  AKM.T_evp_in = T_chill
@@ -90,7 +90,7 @@ def main():
     time_st = time.time()
     stat_data_point = calc_all_myself()
     result = stat_data_point.sort_values(['T_heat','T_cool', 'T_chill','t_Cycle'])
-    result.to_csv('Results/Silica_water_stat_NAN01.csv')
+    result.to_csv('Results/Silica_water_stat_cool.csv')
 
     time_fin = time.time()
     print(' calculation time  : ', time_fin - time_st)

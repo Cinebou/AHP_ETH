@@ -1,3 +1,9 @@
+"""
+Created on Tue 01 Feb
+
+@author: Hibiki Kimura
+"""
+
 import logging
 import numpy as np
 import pickle 

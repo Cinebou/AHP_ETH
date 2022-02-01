@@ -21,7 +21,7 @@ class Validater:
 
     def __readData(self):
         # read data
-        self.stat_data = pd.read_csv('./Results/Silica_water_stat_coolNAN01_adjust.csv')
+        self.stat_data = pd.read_csv('./Results/Silica_water_stat_cool.csv')
         self.dyn_data=pd.read_csv('./Results/dyn_Silica_all.csv')
 
     
@@ -129,7 +129,7 @@ class Validater:
 
         # error count
         nan_count=0
-
+        c=n=0
         # for each data in stat file, compare with the dynamic simulation
         for index, row in self.stat_data.iterrows():
             # take the data from stat_file
@@ -148,13 +148,17 @@ class Validater:
 
             # if the stat value is not NAN, move on to processing data. if not, record on log file
             if (not isnan(self.COP_s_temp)) and (not isnan(self.Qflow_s_temp)):
-                self.arrange_results()
+                if T_reject_s<=288.15:
+                    c+=1
+                    self.arrange_results()
 
             else:
                 nan_count+=1
                 self.record_error(T_chill_s, T_reject_s, T_heat_s, t_Cycle_s)
+                if T_reject_s<=288.15:
+                    n+=1
 
-
+        print('error at low temp : ',n, ' / ',c)
         self.print_results(nan_count)
         self.show_graph_multiple()
 
@@ -214,8 +218,8 @@ class Validater:
         plt.scatter(self.dyn_Qflow,self.stat_Qflow,color='b',s=2.5)
 
         plt.plot([0,1500],[0,1500],color='orange',lw=2)
-        plt.xlabel('$Q_{cool}^{dyn}$  in  W',fontsize=15)
-        plt.ylabel('$Q_{cool}^{stat}$  in  W',fontsize=15)
+        plt.xlabel('$\dot{Q}_{cool}^{dyn}$  in  W',fontsize=15)
+        plt.ylabel('$\dot{Q}_{cool}^{stat}$  in  W',fontsize=15)
         plt.ylim(0,1500)
         plt.xlim(0,1500)
         plt.rcParams['figure.subplot.bottom'] = 0.15

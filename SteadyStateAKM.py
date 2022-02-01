@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Oct 23 14:52:58 2020
+Created on Tue 01 Feb
 
-@author: gibelhaus
+@author: Hibiki Kimura
 """
 import numpy as np
 from scipy import optimize

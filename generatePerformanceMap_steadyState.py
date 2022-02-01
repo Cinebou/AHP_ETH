@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov 12 12:35:04 2020
+Created on Tue 01 Feb
 
-@author: gibelhaus
+@author: Hibiki Kimura
 """
 import numpy as np
 import SteadyStateAKM
