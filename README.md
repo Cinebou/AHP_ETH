@@ -5,7 +5,6 @@ You can calculate the performance of the adsorption chiller(COP, cooling power) 
 ## Dynamic simulation
 You need the sample data from dynamic simualtions for the parameter fittings.  
 You select two temperature triples, (T<sub>heat</sub>, T<sub>reject</sub>, T<sub>chill</sub>) and run the simulation for two lines.  
-Run "dynamic.py"
 ```bash
 python dynamic.py
 ```
@@ -19,7 +18,6 @@ The FMU file is made in DYMOLA.
 Using the obtained data, the parameters in short-cut model is adjusted with least-square method.  
 You shoud tune the initial guess for better fitting results.  
 The fitting parameters are output in the console.  
-Run "fitModel.py"
 ```bash
 python fitModel.py
 ```
@@ -28,7 +26,6 @@ python fitModel.py
 You can store the fitted parameters in "param_database.py".  
 With the optimized parameters, you can calculate the short-cut model.  
 The temperature range can be changed.  
-Run "generate_multipoint.py"
 ```bash
 python generate_multipoint.py
 ```
@@ -38,7 +35,6 @@ Additionally, lower rejecting temperature output error, sometimes.
 
 ## Validation
 You can compare the dynamic simulation results and short-cut model results.  
-Run "validation.py"
 ```bash
 python validation.py
 ```
