@@ -100,17 +100,12 @@ class Validater:
 
             # if the stat value is not NAN, move on to processing data. if not, record on log file
             if (not isnan(self.COP_s_temp)) and (not isnan(self.Qflow_s_temp)):
-                if T_reject_s<=288.15:
-                    c+=1
-                    self.arrange_results()
+                self.arrange_results()
 
             else:
                 nan_count+=1
                 self.record_error(T_chill_s, T_reject_s, T_heat_s, t_Cycle_s)
-                if T_reject_s<=288.15:
-                    n+=1
-
-        print('error at low temp : ',n, ' / ',c)
+                
         self.print_results(nan_count)
         self.show_graph_multiple()
 
