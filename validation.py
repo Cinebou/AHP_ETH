@@ -42,7 +42,7 @@ class Validater:
         self.dyn_Qflow.append(self.Qflow_d_temp)
 
 
-    """ calculate ARE
+    """ calculate ARE (average relative error)
     """
     def ARE_COP(self):
         errorCOP = abs(self.COP_d_temp - self.COP_s_temp)/self.COP_d_temp
@@ -53,24 +53,7 @@ class Validater:
         errorQflow = abs(self.Qflow_d_temp - self.Qflow_s_temp)/self.Qflow_d_temp
         return errorQflow
 
-    def RMSD(self, dyn_COP_A, stat_COP_A, dyn_COP_B, stat_COP_B, dyn_Q_A,stat_Q_A, dyn_Q_B, stat_Q_B):
-        dyn_Qh_A = dyn_Q_A / dyn_COP_A
-        stat_Qh_A = stat_Q_A / stat_COP_A
-        dyn_Qh_B = dyn_Q_B / dyn_COP_B
-        stat_Qh_B = stat_Q_B / stat_COP_B
 
-        rmsd_Q = (dyn_Q_A - stat_Q_A)**2 + (dyn_Q_B - stat_Q_B)**2
-        rmsd_Qh = (dyn_Qh_A - stat_Qh_A)**2 + (dyn_Qh_B - stat_Qh_B)**2
-        return (sum(rmsd_Qh)+sum(rmsd_Q)) / len(dyn_COP_A)/2
-
-    def RMSD_one(self, dyn_COP_A, stat_COP_A, dyn_Q_A,stat_Q_A):
-        dyn_Qh_A = dyn_Q_A / dyn_COP_A
-        stat_Qh_A = stat_Q_A / stat_COP_A
-
-        rmsd_Q = (dyn_Q_A - stat_Q_A)**2 
-        rmsd_Qh = (dyn_Qh_A - stat_Qh_A)**2 
-        return (sum(rmsd_Qh)+sum(rmsd_Q)) / len(dyn_COP_A)
-    
     """ read the results pickle file and return the numpy array """
     def read_pickle(file):
         with open(file, 'rb') as f:
@@ -84,45 +67,14 @@ class Validater:
             COP.append(line[4])
         return np.array(t_cycle), np.array(Qflow), np.array(COP)  
 
-
-    def ARE_one(COP_dyn_903010,Qflow_chill_dyn_903010,COP_stat_903010,Qflow_chill_stat_903010):
-        RE = abs(COP_dyn_903010 - COP_stat_903010)/COP_dyn_903010 + abs(Qflow_chill_dyn_903010 - Qflow_chill_stat_903010)/Qflow_chill_dyn_903010
-        return sum(RE)/len(RE)
-
-    def ARE(COP_dyn_852718,Qflow_chill_dyn_852718,COP_stat_852718,Qflow_chill_stat_852718,COP_dyn_903010,Qflow_chill_dyn_903010,COP_stat_903010,Qflow_chill_stat_903010):
-        RE = abs(COP_dyn_852718 - COP_stat_852718)/COP_dyn_852718 + abs(Qflow_chill_dyn_852718 - Qflow_chill_stat_852718)/Qflow_chill_dyn_852718 + abs(COP_dyn_903010 - COP_stat_903010)/COP_dyn_903010 + abs(Qflow_chill_dyn_903010 - Qflow_chill_stat_903010)/Qflow_chill_dyn_903010
-        return sum(RE)/len(RE)/2
+    # calculate average relative error for fitting performance map
+    def ARE(COP_dyn_A,Qflow_chill_dyn_A,COP_stat_A,Qflow_chill_stat_A,COP_dyn_B,Qflow_chill_dyn_B,COP_stat_B,Qflow_chill_stat_B):
+        RE_COP = abs(COP_dyn_A - COP_stat_A)/COP_dyn_A + abs(COP_dyn_B - COP_stat_B)/COP_dyn_B
+        RE_Q   = abs(Qflow_chill_dyn_A - Qflow_chill_stat_A)/Qflow_chill_dyn_A + abs(Qflow_chill_dyn_B - Qflow_chill_stat_B)/Qflow_chill_dyn_B
+        return (RE_COP + RE_Q) / len(RE_COP) / 2
 
 
-
-
-    """ check the key temperature triple and cycle time are the same and in order
-        if the setting is correct, return True
-        'i' is the index of the data 
-    """
-    def temp_valid(self, i):
-        Heat = self.stat_data['T_heat'][i]
-        Cool = self.stat_data['T_cool'][i]
-        Chill = self.stat_data['T_chill'][i]
-        t_Cycle = self.stat_data['t_Cycle'][i]
-
-        ''' confirm the param setting is the same between dyn and stat'''
-        if Heat==self.dyn_data['T_heat'][i] and Cool==self.dyn_data['T_cool'][i] and Chill==self.dyn_data['T_chill'][i] and t_Cycle==self.dyn_data['t_Cycle'][i]:
-            ''' the temperature should be in order '''
-            if Heat > Cool > Chill:
-                return True
-        return False
-
-
-    def All_ARE(self):
-        error = 0
-        for i in range(len(self.stat_COP)):
-            errorCOP = abs(self.stat_COP[i] - self.dyn_COP[i])/self.dyn_COP[i]
-            errorQflow = abs(self.stat_Qflow[i] - self.dyn_Qflow[i])/self.dyn_Qflow[i]
-            error += (errorCOP+errorQflow)
-        return error / len(self.stat_COP)
-              
-
+    # compare the dynamic and short-cut model one by one
     def validate_data(self):
         self.__readData()
         self.__initResult()

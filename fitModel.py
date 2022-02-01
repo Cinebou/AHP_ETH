@@ -30,12 +30,14 @@ class fitting:
         self.cycle_time_list = cycle_time_list
         self.__read()
 
+    # read the dynamic simulation results
     def __read(self):
         t_cycle_dyn_A, self.Qflow_chill_dyn_A, self.COP_dyn_A = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_Silica123_water_852718.pickle')
         t_cycle_dyn_B, self.Qflow_chill_dyn_B, self.COP_dyn_B = Validater.read_pickle('./PerformanceMap/SCP_COP/dyn_data_Silica123_water_903010.pickle')       
         self.Qflow_heat_dyn_A = self.Qflow_chill_dyn_A/self.COP_dyn_A
         self.Qflow_heat_dyn_B = self.Qflow_chill_dyn_B/self.COP_dyn_B   
 
+    # set the parameters for fitting, and cycle time
     def params_set(self,param, corr, t_cycle):
         param_point = param.copy()
         param_point['alphaA_evp_o'] = corr[0]
@@ -54,7 +56,7 @@ class fitting:
         param_point['t_cycle'] = t_cycle
         return param_point
 
-    
+    # set temperature for simulation
     def temp_set(self, param, Heat, Reject, Chill):
         param_point = param.copy()
         param_point['T_evp_in'] = Chill + 273.15
@@ -64,6 +66,7 @@ class fitting:
         return param_point
 
 
+    # calculate short-cut model for two triples lines
     def performance(self,corr,cycle_time_list, logout = False):
         param = self.param_data.Silica123_water_fit0121
         param_list = [self.params_set(param,corr,t_cycle_i) for t_cycle_i in cycle_time_list]
@@ -89,7 +92,6 @@ class fitting:
         Qflow_chill_B = np.array([AKM_i.Q_flow_evp for AKM_i in AKM_B])
         Qflow_heat_B  = np.array([AKM_i.Q_flow_des for AKM_i in AKM_B])
 
-
         # output parameters, defalut off
         if logout:
             for AKM_i in AKM_A:
@@ -100,7 +102,7 @@ class fitting:
         return Qflow_chill_A, Qflow_heat_A, Qflow_chill_B, Qflow_heat_B
 
 
-    # calculate difference from dynamic simulation
+    # calculate difference between target dynamic simulation and short-cut simulation
     def lsq_perf(self, corr):
         Qflow_chill_stat_A, Qflow_heat_stat_A, Qflow_chill_stat_B, Qflow_heat_stat_B = self.performance(corr,self.cycle_time_list)
         QcoolA_error = abs(Qflow_chill_stat_A - self.Qflow_chill_dyn_A) / self.Qflow_chill_dyn_A
@@ -111,6 +113,7 @@ class fitting:
         return lsq_Qflows
 
 
+    # summarize the results
     def show_fit_map(self, fitted_params):
         # calculate from fitted parameters
         Qflow_chill_stat_A, Qflow_heat_stat_A, Qflow_chill_stat_B, Qflow_heat_stat_B = self.performance(fitted_params,cycle_time_list)

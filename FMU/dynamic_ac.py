@@ -15,13 +15,9 @@ def main():
     # setting of the temperature triple, it should be 'int', by 2℃
     
     T_chill_min , T_chill_max  = 10, 20
-    T_reject_min, T_reject_max = 13,13
-    T_heat_min  , T_heat_max   = 60, 90
-    """
-    T_chill_min , T_chill_max  = 10, 20
     T_reject_min, T_reject_max = 24, 40
     T_heat_min  , T_heat_max   = 60, 90
-    
+    """
     T_chill_min , T_chill_max  = 10,10
     T_reject_min, T_reject_max = 30,30
     T_heat_min  , T_heat_max   = 90,90
@@ -33,6 +29,7 @@ def main():
 
     #setting of the cycle time 
     cycle_time_list = [500,600,700,800,900,1000,1100,1150,1200,1250,1300,1400] # 12 point
+
     #restarting point, default = 0 ( when simulation stops in the middle, you can restart from there)
     restart = 0
     # set temp and time setting

@@ -4,8 +4,7 @@ import pandas as pd
 from scipy import integrate
 import csv
 
-"""Simulation time is 2.5 * t_Cycle  
-   It's determined in the 'rap' in Sim"""
+"""Simulation time is determined in the 'rap' in Sim"""
 
 class Sim:
     def __init__(self, file_name, rap, t_Cycle = None, final_time=None, model = None, opts=None, COP=None, Qflow=None, dt = 0.25):
@@ -40,12 +39,14 @@ class Sim:
         self.opts = self.model.simulate_options()
         
 
+    # set tolarance and time(dt)
     def __set_options(self):
         self.opts["CVode_options"]["atol"] = 1e-6
-        self.opts["CVode_options"]["store_event_points"] = False
-        self.opts['ncp'] = int(self.t_Cycle / self.dt)
+        #self.opts["CVode_options"]["store_event_points"] = False
+        #self.opts['ncp'] = int(self.t_Cycle / self.dt)
 
 
+    # run the simulation
     def simulate_fmu(self, point):
         # initialize the model
         self.__loadFMU()
@@ -61,7 +62,7 @@ class Sim:
         result = self.proc()
         return result
 
-
+    # set simulation parameters, it can be changed in DYMOLA
     def set_in_fmu(self,point):
         # import data settings
         self.T_chill  = point[0] + 273.15
@@ -81,7 +82,7 @@ class Sim:
         self.model.set('T_ads_in',      self.T_reject)
 
 
-
+    # data processing
     def proc(self):
         # get the results of the simulation
         self.t = self.res['time']
@@ -100,7 +101,7 @@ class Sim:
         return summary
 
 
-
+    # add data to saving*.csv
     def save_data(self, resdata):
         with open(self.csvFile, mode='a',newline="") as f:
             writer = csv.writer(f)
@@ -108,10 +109,10 @@ class Sim:
         return 0
 
     
-    # calculate from defined function, it takes long time to get equilibrium, don't use it
+    # calculate from defined function, the list returns the time sequence, [-1] is the final time
     def calc_Q_avg(self):
-        self.Qflow= self.SP_sor_series[-1] * self.mass_sor * 2
-        self.COP    = self.COP_series[-1]
+        self.Qflow = self.SP_sor_series[-1] * self.mass_sor * 2
+        self.COP   = self.COP_series[-1]
         return 0
 
 
@@ -134,7 +135,7 @@ class Sim:
         plt.show()
 
 
-    # calculate Q_flow from only last rap
+    # calculate Q_flow from only last rap, it might not work
     def calc_flow(self):
         Q_evp = self.res['adsorptionChiller.summary.evaporator.DH_liquid']
         Q_ads1 = self.res['adsorptionChiller.summary.Q_flow_ads1_input']
