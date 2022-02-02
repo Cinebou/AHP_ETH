@@ -1,0 +1,25 @@
+# dynamic model
+FMU/*.fmu
+
+# results of dynamic simulation
+PerformanceMap/*.pickle
+PerformanceMap/*.csv
+
+# pycash
+__pycache__/
+trash/
+
+#log file
+Log/*.log
+Log/*.csv
+
+#output data
+Results/*
+
+
+.vscode/
+
+.csv
+
+Fig/*.esp
+fitModel_*
