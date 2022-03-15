@@ -58,4 +58,21 @@ python fitModel.py
 ```
 
 # 5. Run the multiple short-cut simulation
+You need to adjust the temperature range of the simulation in calc_all_myself() of 'generate_multipoint.py'.  
+Make sure that you have the same setting as the dynamic simulation.  
+
+All the simulation results are stored in 'Results/Silica_water_stat_cool.csv'.  
+```
+python generate_multipoint.py
+```
+
+# 6. Validation
+You can compare the simulation results in validate_data(self) of 'validation.py' with sw graph of COP and Qflow.  
+You change the name of the results file at __readData(self).  
+
+If the short-cut simulation has the NAN results at the operating point, the setting of the simulation is recored in the "Log/validate.csv".  
+In 'SteadyStateAKM.py', error is managed with convergency_check(self). When the equation solve optimization doesn't converge and final value is higher than a threhold value, it's regarded as error.  
+
+If not, the results are shown in the graph. 
+
 
