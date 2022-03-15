@@ -68,7 +68,7 @@ class fitting:
 
     # calculate short-cut model for two triples lines
     def performance(self,corr,cycle_time_list, logout = False):
-        param = self.param_data.Silica123_water_fit0121
+        param = self.param_data.Silica123_water
         param_list = [self.params_set(param,corr,t_cycle_i) for t_cycle_i in cycle_time_list]
 
         # set temperature in 85, 27, 18

@@ -51,6 +51,10 @@ Change the name in __read() of 'fitModel.py'.
 
 This file minimise the difference between the results of the dynamic simulation and one of the short-cut model by optimising the parameters in the short-cut model.  
 The fitting parameters are outputed in the console, which are 'alphaA_evp_o', 'alphaA_cond_o', 'alphaA_ads_o', 'D_eff', 'corr_sor_c', 'corr_HX_c','corr_sor_t', 'corr_HX_t' as shown in the code. 
+You can edit the parameter file 'param_database.py'. The parameter here will be used for the calculation later. 
+
+Note: You should change the initial guess of the simulation and run this fitting several times. Each fitting would take around 10 mins.
+You should start the fitting from the same parameters as the dynamic simulation.
 
 ```
 cd ..

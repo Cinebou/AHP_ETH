@@ -67,7 +67,7 @@ def calc_all():
 def T3_cap(T_heat, T_cool, T_chill):
     """ generate and initialze the AKM instance for each calculation """
     param = params()
-    AKM = SteadyStateAKM.adsorptionChiller_steadyState(**param.Silica123_water_fit0121)
+    AKM = SteadyStateAKM.adsorptionChiller_steadyState(**param.Silica123_water)
 
     """ reset the temperature setting """
     AKM.T_des_in = T_heat;  AKM.T_ads_in = T_cool;  AKM.T_cond_in = T_cool;  AKM.T_evp_in = T_chill

@@ -73,6 +73,11 @@ class Validater:
         RE_Q   = abs(Qflow_chill_dyn_A - Qflow_chill_stat_A)/Qflow_chill_dyn_A + abs(Qflow_chill_dyn_B - Qflow_chill_stat_B)/Qflow_chill_dyn_B
         return (RE_COP + RE_Q) / len(RE_COP) / 2
 
+    # calculate average relative error for fitting performance map of one temp_fitting
+    def ARE_one_temp(COP_dyn_A,Qflow_chill_dyn_A,COP_stat_A,Qflow_chill_stat_A):
+        RE_COP = abs(COP_dyn_A - COP_stat_A)/COP_dyn_A
+        RE_Q   = abs(Qflow_chill_dyn_A - Qflow_chill_stat_A)/Qflow_chill_dyn_A
+        return (RE_COP + RE_Q) / len(RE_COP)
 
     # compare the dynamic and short-cut model one by one
     def validate_data(self):

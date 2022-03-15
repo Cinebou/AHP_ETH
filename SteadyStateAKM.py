@@ -95,9 +95,9 @@ class adsorptionChiller_steadyState:
         self.mcp_ads = self.m_flow_ads*self.cp_W
         self.mcp_des = self.m_flow_des*self.cp_W
         
-        self.kA_evp = 1/(1/self.alphaA_evp_o + 1/self.alphaA_evp_i)
-        self.kA_cond = 1/(1/self.alphaA_cond_o + 1/self.alphaA_cond_i)
-        self.kA_ads = 1/(1/self.alphaA_ads_o + 1/self.alphaA_ads_i)
+        self.kA_evp = 1/(1/self.alphaA_evp_o + 1/self.alphaA_evp_o)
+        self.kA_cond = 1/(1/self.alphaA_cond_o + 1/self.alphaA_cond_o)
+        self.kA_ads = 1/(1/self.alphaA_ads_o + 1/self.alphaA_ads_o)
         
         self.beta_LDF = 15*self.D_eff/(self.r_particle**2) * self.m_sor # kg/s
         
