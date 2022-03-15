@@ -1,5 +1,5 @@
 # Quasi-continuous short-cut adsorption chiller process simulator
-You can calculate the performance of the adsorption chiller(COP, cooling power) with good accuracy and high computational efficiency.
+You can calculate the performance of the adsorption chiller(COP, cooling power) with good accuracy and high computational efficiency.  
 An instraction is given in 'manual.md'
 
 
