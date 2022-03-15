@@ -14,8 +14,15 @@ pandas
 pickle  
 scipy   
 
-
 They can be installed with pip.
+
+# File tree
+* FMU/ : dynamic simulation  
+* Log/ : log files e.g. error record file  
+* PerformanceMap/SCP_COP : the performance of the dynamic simulation. They're used for fitting.
+* Results/ : store or use results
+* Sequaence/ : sequence diagrams of the simulator
+* test_code/ : calculate the adsorption potential, enthalpy, fluid properties. If you want to use them, you need to move these files to the ground directly.
 
 # cited parameters
 [1]: Adsorption potentila of Silicagel123_water, 'workingpair_database.py'  
