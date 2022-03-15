@@ -43,6 +43,19 @@ You edit the temperature setting in the main() in 'dynamic_ac.py' and run the si
 You can get the simulation results with './Results/~~~~.pickle'
 
 The point of choosing temperature triple is to make the performance results of two simulation separate.  
-One of the temperature setting should have high COP and Qflow, and the other should have lower performance.  
+One of the temperature setting should have high COP and Qflow, and the other should have lower performance.   
 
 # 4. Fitting of short-cut model
+To conduct the fitting, you need to read the two pickle file that you obtained at last section.  
+Change the name in __read() of 'fitModel.py'.  
+
+This file minimise the difference between the results of the dynamic simulation and one of the short-cut model by optimising the parameters in the short-cut model.  
+The fitting parameters are outputed in the console, which are 'alphaA_evp_o', 'alphaA_cond_o', 'alphaA_ads_o', 'D_eff', 'corr_sor_c', 'corr_HX_c','corr_sor_t', 'corr_HX_t' as shown in the code. 
+
+```
+cd ..
+python fitModel.py
+```
+
+# 5. Run the multiple short-cut simulation
+
