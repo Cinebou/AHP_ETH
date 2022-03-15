@@ -54,6 +54,11 @@ This file minimise the difference between the results of the dynamic simulation 
 The fitting parameters are outputed in the console, which are 'alphaA_evp_o', 'alphaA_cond_o', 'alphaA_ads_o', 'D_eff', 'corr_sor_c', 'corr_HX_c','corr_sor_t', 'corr_HX_t' as shown in the code. 
 You can edit the parameter file 'param_database.py'. The parameter here will be used for the calculation later. 
 
+* if you want to run the one temperature fitting, 'python fitModel_one_temp.py'.  
+      you need only one temperature triple of the dynamic simulation.
+* if you want to run simulations without time dependent coefficients, 'python fitModel_without_dt.py'.  
+      The dt coefficients are set to 0.  
+
 Note: You should change the initial guess of the simulation and run this fitting several times. Each fitting would take around 10 mins.
 You should start the fitting from the same parameters as the dynamic simulation.
 
