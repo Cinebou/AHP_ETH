@@ -62,7 +62,7 @@ def calc_all():
 
 
 
-""" calculate 'Qflow vs. COP graph' of each temperature settings
+""" calculate 'Qflow vs. COP graph' of each temperature settings with several cycle time
 """
 def T3_cap(T_heat, T_cool, T_chill):
     """ generate and initialze the AKM instance for each calculation """
