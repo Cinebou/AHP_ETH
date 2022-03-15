@@ -156,6 +156,8 @@ def main():
 
     # fitting results
     fitted_params = res_perf.x
+
+    # output the fitting parameter into the console
     print(fitted_params)
 
     time_end = time.time()  
