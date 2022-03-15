@@ -37,3 +37,12 @@ All the simulation results is stored in "Results/saving"+self.file_name.replace(
 cd FMU
 python dynamic_ac.py
 ```
+
+# 3. Extract dynamic simulation of two temperature triples
+You edit the temperature setting in the main() in 'dynamic_ac.py' and run the simulation again.
+You can get the simulation results with './Results/~~~~.pickle'
+
+The point of choosing temperature triple is to make the performance results of two simulation separate.  
+One of the temperature setting should have high COP and Qflow, and the other should have lower performance.  
+
+# 4. Fitting of short-cut model
