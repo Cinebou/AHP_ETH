@@ -12,8 +12,9 @@ def main():
     global cycle_time_list
 
     time_st = time()
-    # setting of the temperature triple, it should be 'int', by 2℃
     
+    # setting of the temperature triple, it should be 'int', by 2℃
+    """
     T_chill_min , T_chill_max  = 10, 20
     T_reject_min, T_reject_max = 24, 40
     T_heat_min  , T_heat_max   = 60, 90
@@ -21,7 +22,7 @@ def main():
     T_chill_min , T_chill_max  = 10,10
     T_reject_min, T_reject_max = 30,30
     T_heat_min  , T_heat_max   = 90,90
-    
+    """
     T_chill_min , T_chill_max  = 18,18
     T_reject_min, T_reject_max = 27,27
     T_heat_min  , T_heat_max   = 85,90

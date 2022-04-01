@@ -113,7 +113,7 @@ class params:
               'corr_HX_t': 6.02e-02
               }
 
-        self.Silica123_water_without_dt = {
+        self.Silica123_water_without_dt = { # without time dependent coefficient
               'm_flow_evp':0.191, 
               'm_flow_cond':0.111,
               'm_flow_ads':0.166,

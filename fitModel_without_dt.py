@@ -17,7 +17,7 @@ from param_database import params
 # cycle time list is imported from 'generatePerformanceMap_steadyState'
 from generatePerformanceMap_steadyState import cycle_time_list
 
-
+# without time dependent coefficient
 class fitting:
     def __init__(self,cycle_time_list):
         self.vl = Validater()
