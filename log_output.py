@@ -6,13 +6,14 @@ Created on Tue 01 Feb
 
 import logging
 import numpy as np
-
-
+from os import mkdir
 
 """ 
 The results or Logger can be summarized in Log/ folder
 Each Logging can be turned off by 'lg.setlevel(logging.WARN)'
 """
+mkdir('./Log')
+
 
 class Log:
         """ Define the Logging settings, log file, format, Log on/off
